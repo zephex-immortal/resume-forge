@@ -126,9 +126,10 @@ body {
 .btn-sm:hover { border-color: var(--cyan); color: var(--cyan); }
 
 /* Template selector */
-.template-selector { display: flex; gap: 0.5rem; }
+.template-selector { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .tmpl-option {
     flex: 1;
+    min-width: 80px;
     padding: 0.5rem;
     border: 1px solid var(--border);
     border-radius: 4px;
@@ -378,6 +379,26 @@ body {
 .resume-modern .mod-item-sub {
     font-size: 0.7rem;
     color: #555;
+}
+
+/* ── EXECUTIVE TEMPLATE ─────────────────────────────────── */
+.resume-executive {
+    font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+/* ── CREATIVE TEMPLATE ──────────────────────────────────── */
+.resume-creative {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ── TIMELINE TEMPLATE ──────────────────────────────────── */
+.resume-timeline {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ── COLUMNS TEMPLATE ───────────────────────────────────── */
+.resume-columns {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
 }
 
 /* ── MODALS ── */

@@ -145,12 +145,28 @@
                         <button type="button" class="btn-sm" id="add-edu">+ add education</button>
                     </div>
 
-                    <!-- Skills -->
+                    <!-- Skills (Categorized) -->
                     <div class="form-section">
                         <div class="section-label"><span class="cyan">▸</span> skills</div>
                         <div class="form-group">
-                            <label>comma separated</label>
-                            <input type="text" id="skills" placeholder="TypeScript, Go, Python, Next.js, Supabase">
+                            <label>languages</label>
+                            <input type="text" id="skills-languages" placeholder="Go, TypeScript, Python, JavaScript">
+                        </div>
+                        <div class="form-group">
+                            <label>frameworks</label>
+                            <input type="text" id="skills-frameworks" placeholder="React, Next.js, Express, Gin">
+                        </div>
+                        <div class="form-group">
+                            <label>tools & platforms</label>
+                            <input type="text" id="skills-tools" placeholder="Docker, Git, Kubernetes, Linux">
+                        </div>
+                        <div class="form-group">
+                            <label>databases</label>
+                            <input type="text" id="skills-databases" placeholder="PostgreSQL, MongoDB, Redis">
+                        </div>
+                        <div class="form-group">
+                            <label>cloud</label>
+                            <input type="text" id="skills-cloud" placeholder="AWS, GCP, Azure">
                         </div>
                     </div>
 
@@ -177,6 +193,26 @@
                                 <input type="radio" name="template" value="modern" hidden>
                                 <span class="tmpl-name">modern</span>
                                 <span class="tmpl-desc">split layout</span>
+                            </label>
+                            <label class="tmpl-option" data-tmpl="executive">
+                                <input type="radio" name="template" value="executive" hidden>
+                                <span class="tmpl-name">executive</span>
+                                <span class="tmpl-desc">premium formal</span>
+                            </label>
+                            <label class="tmpl-option" data-tmpl="creative">
+                                <input type="radio" name="template" value="creative" hidden>
+                                <span class="tmpl-name">creative</span>
+                                <span class="tmpl-desc">bold & colorful</span>
+                            </label>
+                            <label class="tmpl-option" data-tmpl="timeline">
+                                <input type="radio" name="template" value="timeline" hidden>
+                                <span class="tmpl-name">timeline</span>
+                                <span class="tmpl-desc">chronological</span>
+                            </label>
+                            <label class="tmpl-option" data-tmpl="columns">
+                                <input type="radio" name="template" value="columns" hidden>
+                                <span class="tmpl-name">columns</span>
+                                <span class="tmpl-desc">two-column</span>
                             </label>
                         </div>
                     </div>
@@ -266,6 +302,54 @@
                             </div>
                         </div>
                     </div>
+                    <div class="tmpl-preview-card" data-tmpl="executive">
+                        <div class="tmpl-preview-header">executive</div>
+                        <div class="tmpl-preview-body" style="background:linear-gradient(135deg,#0a1628 0%,#0d1f3c 100%);padding:0.5rem;">
+                            <div style="height:16px;background:#1a2a4a;border-radius:2px;margin-bottom:0.3rem;"></div>
+                            <div style="height:6px;background:#c8a951;width:60%;border-radius:2px;margin-bottom:0.3rem;"></div>
+                            <div style="height:2px;background:rgba(200,169,81,0.3);margin:0.3rem 0;"></div>
+                            <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:2px;margin-bottom:0.2rem;"></div>
+                            <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:2px;width:70%;"></div>
+                        </div>
+                    </div>
+                    <div class="tmpl-preview-card" data-tmpl="creative">
+                        <div class="tmpl-preview-header">creative</div>
+                        <div class="tmpl-preview-body" style="background:linear-gradient(135deg,#1a0033 0%,#330066 50%,#006666 100%);padding:0.5rem;">
+                            <div style="height:16px;background:rgba(255,255,255,0.15);border-radius:4px;margin-bottom:0.3rem;"></div>
+                            <div style="height:6px;background:#ff6b9d;width:50%;border-radius:3px;margin-bottom:0.3rem;"></div>
+                            <div style="height:6px;background:#00d4aa;border-radius:3px;margin-bottom:0.2rem;"></div>
+                            <div style="height:6px;background:rgba(255,255,255,0.08);border-radius:3px;width:80%;"></div>
+                        </div>
+                    </div>
+                    <div class="tmpl-preview-card" data-tmpl="timeline">
+                        <div class="tmpl-preview-header">timeline</div>
+                        <div class="tmpl-preview-body" style="display:flex;gap:0.3rem;padding:0.5rem;">
+                            <div style="width:20%;border-right:2px solid var(--cyan-dim);padding-right:0.2rem;">
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:0.3rem;"></div>
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;"></div>
+                            </div>
+                            <div style="flex:1;">
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:0.3rem;"></div>
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;width:70%;margin-bottom:0.3rem;"></div>
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tmpl-preview-card" data-tmpl="columns">
+                        <div class="tmpl-preview-header">columns</div>
+                        <div class="tmpl-preview-body" style="display:flex;gap:0.3rem;padding:0.5rem;">
+                            <div style="flex:1;background:rgba(255,255,255,0.03);padding:0.3rem;border-radius:2px;">
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:0.3rem;"></div>
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;width:60%;margin-bottom:0.3rem;"></div>
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;"></div>
+                            </div>
+                            <div style="flex:1;background:rgba(255,255,255,0.03);padding:0.3rem;border-radius:2px;">
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;margin-bottom:0.3rem;"></div>
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;width:70%;margin-bottom:0.3rem;"></div>
+                                <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:2px;"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -283,7 +367,7 @@
                 <p><span class="cyan">resume forge</span> v0.1</p>
                 <p class="dim">AI-powered resume generator by zephex.</p>
                 <p class="dim mt">Powered by Gemini API · ₹10 per generation</p>
-                <p class="dim">Templates: Compact · Terminal · Minimal · Modern</p>
+                <p class="dim">Templates: Compact · Terminal · Minimal · Modern · Executive · Creative · Timeline · Columns</p>
             </div>
         </div>
     </div>

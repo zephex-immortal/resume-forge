@@ -43,160 +43,162 @@ document.addEventListener('DOMContentLoaded', () => {
     const navCount = document.getElementById('nav-gen-count');
     const expContainer = document.getElementById('exp-container');
     const eduContainer = document.getElementById('edu-container');
-    const modalClose = document.getElementById('modal-close');
-    const aboutClose = document.querySelector('.about-close');
-    const templatesModal = document.getElementById('templates-modal');
-    const aboutModal = document.getElementById('about-modal');
-    const historyPanel = document.getElementById('history-panel');
     const historyList = document.getElementById('history-list');
     const emptyHistory = document.getElementById('empty-history');
-
-    // ─── INIT ───────────────────────────────────────────────
-    updateGenCountDisplay();
-    renderHistory();
-
-    // ─── TOAST SYSTEM ───────────────────────────────────────
-    function showToast(msg, type = 'info') {
-        const existing = document.querySelector('.toast-msg');
-        if (existing) existing.remove();
-        const toast = document.createElement('div');
-        toast.className = `toast-msg toast-${type}`;
-        toast.textContent = msg;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.classList.add('show'), 10);
-        setTimeout(() => {
-            toast.classList.remove('show');
-            setTimeout(() => toast.remove(), 300);
-        }, 4000);
-    }
-
-    // ─── ADD EXPERIENCE ─────────────────────────────────────
-    function createExpEntry(data = {}) {
-        const entry = document.createElement('div');
-        entry.className = 'exp-entry';
-        if (data.company) entry.dataset.hasData = 'true';
-        entry.innerHTML = `
-            <div class="exp-header"><span class="exp-counter">#1</span><button type="button" class="remove-entry" title="remove">✕</button></div>
-            <div class="form-row">
-                <div class="form-group flex-1"><label>company</label><input type="text" class="exp-company" placeholder="Company" value="${data.company || ''}"></div>
-                <div class="form-group flex-1"><label>role</label><input type="text" class="exp-role" placeholder="Role" value="${data.role || ''}"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group flex-1"><label>from</label><input type="text" class="exp-from" placeholder="2024" value="${data.from || ''}"></div>
-                <div class="form-group flex-1"><label>to</label><input type="text" class="exp-to" placeholder="Present" value="${data.to || ''}"></div>
-            </div>
-            <div class="form-group"><label>description</label><textarea class="exp-desc" rows="2" placeholder="What you did... (AI will expand this)">${data.desc || ''}</textarea></div>
-        `;
-        entry.querySelector('.remove-entry').addEventListener('click', () => entry.remove());
-        return entry;
-    }
-
-    function updateExpCounters() {
-        document.querySelectorAll('.exp-entry').forEach((el, i) => {
-            const c = el.querySelector('.exp-counter');
-            if (c) c.textContent = `#${i + 1}`;
-        });
-    }
-
-    document.getElementById('add-exp').addEventListener('click', () => {
-        const entry = createExpEntry();
-        expContainer.appendChild(entry);
-        updateExpCounters();
-    });
-
-    function createEduEntry(data = {}) {
-        const entry = document.createElement('div');
-        entry.className = 'edu-entry';
-        entry.innerHTML = `
-            <div class="exp-header"><span class="exp-counter">#1</span><button type="button" class="remove-entry" title="remove">✕</button></div>
-            <div class="form-row">
-                <div class="form-group flex-1"><label>school</label><input type="text" class="edu-school" placeholder="University Name" value="${data.school || ''}"></div>
-                <div class="form-group flex-1"><label>degree</label><input type="text" class="edu-degree" placeholder="B.Tech CSE" value="${data.degree || ''}"></div>
-            </div>
-            <div class="form-row">
-                <div class="form-group flex-1"><label>from</label><input type="text" class="edu-from" placeholder="2024" value="${data.from || ''}"></div>
-                <div class="form-group flex-1"><label>to</label><input type="text" class="edu-to" placeholder="2028" value="${data.to || ''}"></div>
-            </div>
-        `;
-        entry.querySelector('.remove-entry')?.addEventListener('click', () => entry.remove());
-        return entry;
-    }
-
-    document.getElementById('add-edu').addEventListener('click', () => {
-        const entry = createEduEntry();
-        eduContainer.appendChild(entry);
-    });
-
-    // ─── TEMPLATE SELECTION ────────────────────────────────
-    document.querySelectorAll('.tmpl-option').forEach(el => {
-        el.addEventListener('click', () => {
-            document.querySelectorAll('.tmpl-option').forEach(o => o.classList.remove('selected'));
-            el.classList.add('selected');
-            const radio = el.querySelector('input[type="radio"]');
-            if (radio) {
-                radio.checked = true;
-                state.template = radio.value;
-            }
-        });
-    });
+    const historyPanel = document.getElementById('history-panel');
 
     // ─── MODALS ─────────────────────────────────────────────
-    document.getElementById('nav-templates-btn').addEventListener('click', (e) => {
-        e.preventDefault();
-        templatesModal.classList.remove('hidden');
-    });
-    document.getElementById('nav-about-btn').addEventListener('click', (e) => {
-        e.preventDefault();
-        aboutModal.classList.remove('hidden');
-    });
-    const closeModals = () => {
-        templatesModal.classList.add('hidden');
-        aboutModal.classList.add('hidden');
-    };
-    modalClose?.addEventListener('click', closeModals);
-    aboutClose?.addEventListener('click', closeModals);
-    document.querySelectorAll('.modal-backdrop').forEach(b => b.addEventListener('click', closeModals));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModals(); });
+    const templatesModal = document.getElementById('templates-modal');
+    const aboutModal = document.getElementById('about-modal');
 
-    // Template preview cards
+    document.getElementById('nav-templates-btn').addEventListener('click', () => templatesModal.classList.remove('hidden'));
+    document.getElementById('modal-close').addEventListener('click', () => templatesModal.classList.add('hidden'));
+    templatesModal.querySelector('.modal-backdrop').addEventListener('click', () => templatesModal.classList.add('hidden'));
+
+    document.getElementById('nav-about-btn').addEventListener('click', () => aboutModal.classList.remove('hidden'));
+    document.querySelector('.about-close').addEventListener('click', () => aboutModal.classList.add('hidden'));
+    aboutModal.querySelector('.modal-backdrop').addEventListener('click', () => aboutModal.classList.add('hidden'));
+
+    // ─── TEMPLATE SELECTION ─────────────────────────────────
+    document.querySelectorAll('.tmpl-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+            document.querySelectorAll('.tmpl-option').forEach(o => o.classList.remove('selected'));
+            opt.classList.add('selected');
+            const tmpl = opt.dataset.tmpl;
+            state.template = tmpl;
+            document.querySelectorAll('input[name="template"]').forEach(r => r.checked = (r.value === tmpl));
+        });
+    });
+
+    // Template preview cards in modal
     document.querySelectorAll('.tmpl-preview-card').forEach(card => {
         card.addEventListener('click', () => {
             const tmpl = card.dataset.tmpl;
             state.template = tmpl;
-            document.querySelectorAll('.tmpl-option').forEach(o => {
-                o.classList.toggle('selected', o.dataset.tmpl === tmpl);
-                const radio = o.querySelector('input[type="radio"]');
-                if (radio) radio.checked = (radio.value === tmpl);
-            });
-            closeModals();
+            document.querySelectorAll('.tmpl-option').forEach(o => o.classList.toggle('selected', o.dataset.tmpl === tmpl));
+            document.querySelectorAll('input[name="template"]').forEach(r => r.checked = (r.value === tmpl));
+            templatesModal.classList.add('hidden');
         });
     });
 
-    // ─── HISTORY TOGGLE ─────────────────────────────────────
-    document.getElementById('nav-history-btn').addEventListener('click', (e) => {
-        e.preventDefault();
+    // ─── EXPERIENCE ENTRIES ─────────────────────────────────
+    function createExpEntry(data) {
+        const div = document.createElement('div');
+        div.className = 'exp-entry';
+        div.innerHTML = `
+            <div class="exp-header">
+                <span class="exp-counter">#${expContainer.children.length + 1}</span>
+                <button type="button" class="remove-entry" title="remove">✕</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label>company</label>
+                    <input type="text" class="exp-company" value="${data?.company || ''}" placeholder="Google">
+                </div>
+                <div class="form-group flex-1">
+                    <label>role</label>
+                    <input type="text" class="exp-role" value="${data?.role || ''}" placeholder="Software Engineer">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label>from</label>
+                    <input type="text" class="exp-from" value="${data?.from || ''}" placeholder="2024">
+                </div>
+                <div class="form-group flex-1">
+                    <label>to</label>
+                    <input type="text" class="exp-to" value="${data?.to || ''}" placeholder="Present">
+                </div>
+            </div>
+            <div class="form-group">
+                <label>description (optional — AI can expand)</label>
+                <textarea class="exp-desc" rows="2" placeholder="What you did...">${data?.desc || ''}</textarea>
+            </div>
+        `;
+        div.querySelector('.remove-entry').addEventListener('click', () => {
+            div.remove();
+            updateExpCounters();
+        });
+        return div;
+    }
+
+    function updateExpCounters() {
+        document.querySelectorAll('.exp-counter').forEach((c, i) => c.textContent = `#${i + 1}`);
+    }
+
+    document.getElementById('add-exp').addEventListener('click', () => {
+        expContainer.appendChild(createExpEntry());
+        updateExpCounters();
+    });
+
+    // ─── EDUCATION ENTRIES ──────────────────────────────────
+    function createEduEntry(data) {
+        const div = document.createElement('div');
+        div.className = 'edu-entry';
+        div.innerHTML = `
+            <div class="exp-header">
+                <span class="exp-counter">#${eduContainer.children.length + 1}</span>
+                <button type="button" class="remove-entry" title="remove">✕</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label>school</label>
+                    <input type="text" class="edu-school" value="${data?.school || ''}" placeholder="University Name">
+                </div>
+                <div class="form-group flex-1">
+                    <label>degree</label>
+                    <input type="text" class="edu-degree" value="${data?.degree || ''}" placeholder="B.Tech CSE">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label>from</label>
+                    <input type="text" class="edu-from" value="${data?.from || ''}" placeholder="2024">
+                </div>
+                <div class="form-group flex-1">
+                    <label>to</label>
+                    <input type="text" class="edu-to" value="${data?.to || ''}" placeholder="2028">
+                </div>
+            </div>
+        `;
+        div.querySelector('.remove-entry').addEventListener('click', () => {
+            div.remove();
+            updateEduCounters();
+        });
+        return div;
+    }
+
+    function updateEduCounters() {
+        document.querySelectorAll('.edu-counter').forEach((c, i) => c.textContent = `#${i + 1}`);
+    }
+
+    document.getElementById('add-edu').addEventListener('click', () => {
+        eduContainer.appendChild(createEduEntry());
+        updateEduCounters();
+    });
+
+    // ─── HISTORY ────────────────────────────────────────────
+    document.getElementById('nav-history-btn').addEventListener('click', () => {
         historyPanel.classList.toggle('open');
     });
     document.getElementById('close-history').addEventListener('click', () => {
         historyPanel.classList.remove('open');
     });
 
-    // ─── RENDER HISTORY ────────────────────────────────────
     function renderHistory() {
-        if (!historyList) return;
-        if (resumeHistory.length === 0) {
+        if (!resumeHistory.length) {
+            emptyHistory.classList.remove('hidden');
             historyList.innerHTML = '';
-            if (emptyHistory) emptyHistory.style.display = 'block';
             return;
         }
-        if (emptyHistory) emptyHistory.style.display = 'none';
-
+        emptyHistory.classList.add('hidden');
         historyList.innerHTML = resumeHistory.map((item, idx) => {
-            const date = new Date(item.timestamp);
-            const dateStr = date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-            const timeStr = date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
-            return `<div class="history-item">
-                <div class="hi-info" onclick="document.getElementById('load-history-${idx}').click()">
+            const d = new Date(item.timestamp);
+            const dateStr = d.toLocaleDateString();
+            const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            return `
+            <div class="history-item">
+                <div class="hi-info">
                     <div class="hi-name">${item.name || 'Untitled'}</div>
                     <div class="hi-meta">${item.role || ''} · ${item.template || ''} · ${dateStr} ${timeStr}</div>
                 </div>
@@ -235,6 +237,137 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ─── SKILLS RENDER HELPER ──────────────────────────────
+    function renderSkillsBlock(data, mode) {
+        // Check if categorized skills exist
+        const hasCategorized = data.skills_languages || data.skills_frameworks || data.skills_tools || data.skills_databases || data.skills_cloud;
+        
+        if (hasCategorized) {
+            const categories = [
+                { label: 'Languages', value: data.skills_languages },
+                { label: 'Frameworks', value: data.skills_frameworks },
+                { label: 'Tools & Platforms', value: data.skills_tools },
+                { label: 'Databases', value: data.skills_databases },
+                { label: 'Cloud', value: data.skills_cloud },
+            ].filter(c => c.value);
+
+            if (mode === 'compact') {
+                return `<div><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Skills</div>
+                    ${categories.map(cat => `
+                        <div style="margin-bottom:0.3rem;">
+                            <div style="font-size:0.65rem;font-weight:600;color:#555;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.65rem;padding:0.15rem 0.5rem;background:#f0f0f0;border-radius:2px;">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            } else if (mode === 'terminal') {
+                return `<div class="rt-section"><div class="rt-section-title">// skills</div>
+                    ${categories.map(cat => `
+                        <div style="margin-bottom:0.3rem;">
+                            <div style="font-size:0.65rem;font-weight:600;color:#00cc9e;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div class="rt-skills">
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span class="rt-skill-tag">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            } else if (mode === 'minimal') {
+                return `<div style="margin-top:0.8rem;"><div class="rm-section-title">Skills</div>
+                    ${categories.map(cat => `
+                        <div style="margin-top:0.3rem;">
+                            <div style="font-size:0.65rem;font-weight:600;color:#555;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.65rem;padding:0.1rem 0.5rem;border:1px solid #ddd;border-radius:2px;">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            } else if (mode === 'modern') {
+                return `<div><div class="mod-section-title">Skills</div>
+                    ${categories.map(cat => `
+                        <div style="margin-bottom:0.3rem;">
+                            <div style="font-size:0.62rem;font-weight:600;color:#00ffc8;margin-bottom:0.05rem;">${cat.label}</div>
+                            ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<div class="mod-skill-item">▸ ${s}</div>`).join('')}
+                        </div>
+                    `).join('')}
+                </div>`;
+            } else if (mode === 'executive') {
+                return `<div style="margin-bottom:0.8rem;">
+                    <div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Core Competencies</div>
+                    ${categories.map(cat => `
+                        <div style="margin-bottom:0.3rem;">
+                            <div style="font-size:0.65rem;font-weight:600;color:#8899aa;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.25rem;">
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.4rem;border:1px solid #d4c5a9;border-radius:2px;color:#2c3e50;">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            } else if (mode === 'creative') {
+                return `<div style="margin-bottom:0.8rem;">
+                    <div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✦ Skills</div>
+                    ${categories.map(cat => `
+                        <div style="margin-bottom:0.3rem;">
+                            <div style="font-size:0.65rem;font-weight:600;color:#00d4aa;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.25rem;">
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.5rem;background:rgba(255,107,157,0.1);border-radius:12px;color:#6b2fa0;font-weight:500;">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            } else if (mode === 'timeline') {
+                return `<div style="margin-bottom:0.8rem;">
+                    <div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #3498db;padding-bottom:0.2rem;margin-bottom:0.3rem;">Skills</div>
+                    ${categories.map(cat => `
+                        <div style="margin-bottom:0.3rem;padding-left:1rem;border-left:2px solid #e0e0e0;">
+                            <div style="font-size:0.65rem;font-weight:600;color:#3498db;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.25rem;">
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.4rem;background:#f8f9fa;border-radius:2px;color:#555;">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            } else if (mode === 'columns') {
+                return `<div style="margin-bottom:0.8rem;">
+                    <div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #2c3e50;padding-bottom:0.2rem;margin-bottom:0.3rem;">Skills</div>
+                    ${categories.map(cat => `
+                        <div style="margin-bottom:0.3rem;">
+                            <div style="font-size:0.65rem;font-weight:600;color:#555;margin-bottom:0.05rem;">${cat.label}</div>
+                            <div style="display:flex;flex-wrap:wrap;gap:0.2rem;">
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.6rem;padding:0.05rem 0.3rem;background:#f0f0f0;border-radius:2px;color:#333;">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
+        } else {
+            // Fallback to flat skills
+            const skills = data.skills ? data.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+            if (!skills.length) return '';
+
+            if (mode === 'compact') {
+                return `<div><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${skills.map(s => `<span style="font-size:0.65rem;padding:0.15rem 0.5rem;background:#f0f0f0;border-radius:2px;">${s}</span>`).join('')}</div></div>`;
+            } else if (mode === 'terminal') {
+                return `<div class="rt-section"><div class="rt-section-title">// skills</div><div class="rt-skills">${skills.map(s => `<span class="rt-skill-tag">${s}</span>`).join('')}</div></div>`;
+            } else if (mode === 'minimal') {
+                return `<div style="margin-top:0.8rem;"><div class="rm-section-title">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.3rem;">${skills.map(s => `<span style="font-size:0.65rem;padding:0.1rem 0.5rem;border:1px solid #ddd;border-radius:2px;">${s}</span>`).join('')}</div></div>`;
+            } else if (mode === 'modern') {
+                return `<div><div class="mod-section-title">Skills</div>${skills.map(s => `<div class="mod-skill-item">▸ ${s}</div>`).join('')}</div>`;
+            } else if (mode === 'executive') {
+                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${skills.map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.4rem;border:1px solid #d4c5a9;border-radius:2px;color:#2c3e50;">${s}</span>`).join('')}</div></div>`;
+            } else if (mode === 'creative') {
+                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">✦ Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${skills.map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.5rem;background:rgba(255,107,157,0.1);border-radius:12px;color:#6b2fa0;font-weight:500;">${s}</span>`).join('')}</div></div>`;
+            } else if (mode === 'timeline') {
+                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #3498db;padding-bottom:0.2rem;margin-bottom:0.3rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.25rem;padding-left:1rem;border-left:2px solid #e0e0e0;">${skills.map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.4rem;background:#f8f9fa;border-radius:2px;color:#555;">${s}</span>`).join('')}</div></div>`;
+            } else if (mode === 'columns') {
+                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #2c3e50;padding-bottom:0.2rem;margin-bottom:0.3rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.2rem;">${skills.map(s => `<span style="font-size:0.6rem;padding:0.05rem 0.3rem;background:#f0f0f0;border-radius:2px;color:#333;">${s}</span>`).join('')}</div></div>`;
+            }
+        }
+        return '';
+    }
+
     // ─── COLLECT FORM DATA ─────────────────────────────────
     function getFormData() {
         const exps = [];
@@ -257,7 +390,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         return {
-            // API key now handled server-side
             name: document.getElementById('name').value.trim() || 'Your Name',
             role: document.getElementById('role').value.trim() || 'Developer',
             email: document.getElementById('email').value.trim() || '',
@@ -265,7 +397,12 @@ document.addEventListener('DOMContentLoaded', () => {
             location: document.getElementById('location').value.trim() || '',
             portfolio: document.getElementById('portfolio').value.trim() || '',
             summary: document.getElementById('summary').value.trim() || '',
-            skills: document.getElementById('skills').value.trim() || '',
+            skills: document.getElementById('skills')?.value.trim() || '',
+            skills_languages: document.getElementById('skills-languages').value.trim() || '',
+            skills_frameworks: document.getElementById('skills-frameworks').value.trim() || '',
+            skills_tools: document.getElementById('skills-tools').value.trim() || '',
+            skills_databases: document.getElementById('skills-databases').value.trim() || '',
+            skills_cloud: document.getElementById('skills-cloud').value.trim() || '',
             experience: exps.filter(e => e.company && e.role),
             education: edus.filter(e => e.school && e.degree),
             template: state.template,
@@ -274,7 +411,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── FILL FORM FROM HISTORY ────────────────────────────
     function fillFormFromData(data) {
-        // API key handled server-side
         if (data.name) document.getElementById('name').value = data.name;
         if (data.role) document.getElementById('role').value = data.role;
         if (data.email) document.getElementById('email').value = data.email;
@@ -282,7 +418,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.location) document.getElementById('location').value = data.location;
         if (data.portfolio) document.getElementById('portfolio').value = data.portfolio;
         if (data.summary) document.getElementById('summary').value = data.summary;
-        if (data.skills) document.getElementById('skills').value = data.skills;
+        
+        // Fill categorized skills
+        if (document.getElementById('skills-languages')) {
+            if (data.skills_languages) document.getElementById('skills-languages').value = data.skills_languages;
+            if (data.skills_frameworks) document.getElementById('skills-frameworks').value = data.skills_frameworks;
+            if (data.skills_tools) document.getElementById('skills-tools').value = data.skills_tools;
+            if (data.skills_databases) document.getElementById('skills-databases').value = data.skills_databases;
+            if (data.skills_cloud) document.getElementById('skills-cloud').value = data.skills_cloud;
+        }
+        // Fallback for old flat skills field
+        if (data.skills && document.getElementById('skills')) {
+            document.getElementById('skills').value = data.skills;
+        }
+        
         if (data.template) {
             state.template = data.template;
             document.querySelectorAll('.tmpl-option').forEach(o => o.classList.toggle('selected', o.dataset.tmpl === data.template));
@@ -301,12 +450,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!data.education?.length) eduContainer.appendChild(createEduEntry());
     }
 
-    // ─── GENERATE WITH GEMINI ──────────────────────────────
-    
-
     // ─── RENDER RESUME ─────────────────────────────────────
     function renderResume(data, aiContent) {
-        const skills = data.skills.split(',').map(s => s.trim()).filter(Boolean);
         const summary = aiContent?.summary || data.summary || 'Professional with experience in software development and technology.';
         const experiences = aiContent?.experience?.length ? aiContent.experience : data.experience;
         const educations = aiContent?.education?.length ? aiContent.education : data.education;
@@ -324,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${summary ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Summary</div><p style="font-size:0.72rem;line-height:1.5;color:#333;margin:0;">${summary}</p></div>` : ''}
                 ${experiences.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Experience</div>${experiences.map(e => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.78rem;font-weight:600;">${e.role} — <span style="font-weight:400;color:#555;">${e.company}</span></div><div style="font-size:0.65rem;color:#777;">${e.from || ''} — ${e.to || ''}</div><div style="font-size:0.7rem;color:#444;margin-top:0.1rem;line-height:1.4;">${e.description || e.desc || ''}</div></div>`).join('')}</div>` : ''}
                 ${educations.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Education</div>${educations.map(e => `<div style="font-size:0.75rem;margin-bottom:0.15rem;"><span style="font-weight:600;">${e.degree}</span> — ${e.school} <span style="color:#777;">(${e.from || ''} — ${e.to || ''})</span></div>`).join('')}</div>` : ''}
-                ${skills.length ? `<div><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${skills.map(s => `<span style="font-size:0.65rem;padding:0.15rem 0.5rem;background:#f0f0f0;border-radius:2px;">${s}</span>`).join('')}</div></div>` : ''}
+                ${renderSkillsBlock(data, 'compact')}
             </div>`;
         } else if (data.template === 'terminal') {
             html = `<div class="resume-output resume-terminal">
@@ -333,7 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${summary ? `<div class="rt-section"><div class="rt-section-title">// summary</div><div class="rt-item-desc">${summary}</div></div>` : ''}
                     ${experiences.length ? `<div class="rt-section"><div class="rt-section-title">// experience</div>${experiences.map(e => `<div class="rt-item"><div class="rt-item-title">${e.role} @ ${e.company}</div><div class="rt-item-sub">${e.from || ''} — ${e.to || ''}</div><div class="rt-item-desc">${e.description || e.desc || ''}</div></div>`).join('')}</div>` : ''}
                     ${educations.length ? `<div class="rt-section"><div class="rt-section-title">// education</div>${educations.map(e => `<div class="rt-item"><div class="rt-item-title">${e.degree} @ ${e.school}</div><div class="rt-item-sub">${e.from || ''} — ${e.to || ''}</div></div>`).join('')}</div>` : ''}
-                    ${skills.length ? `<div class="rt-section"><div class="rt-section-title">// skills</div><div class="rt-skills">${skills.map(s => `<span class="rt-skill-tag">${s}</span>`).join('')}</div></div>` : ''}
+                    ${renderSkillsBlock(data, 'terminal')}
                 </div>
             </div>`;
         } else if (data.template === 'minimal') {
@@ -343,19 +488,107 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="rt-section-title">${'\u2500'.repeat(30)}</div>
                     <p style="font-size:0.75rem;margin:0.5rem 0;line-height:1.5;color:#333;">${summary}</p>
                     ${experiences.length ? `<div style="margin-top:0.8rem;"><div class="rm-section-title">Experience</div>${experiences.map(e => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.78rem;font-weight:600;">${e.role} — ${e.company}</div><div style="font-size:0.68rem;color:#555;">${e.from || ''} — ${e.to || ''}</div><div style="font-size:0.7rem;color:#333;margin-top:0.1rem;">${e.description || e.desc || ''}</div></div>`).join('')}</div>` : ''}
-                    ${skills.length ? `<div style="margin-top:0.8rem;"><div class="rm-section-title">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.3rem;">${skills.map(s => `<span style="font-size:0.65rem;padding:0.1rem 0.5rem;border:1px solid #ddd;border-radius:2px;">${s}</span>`).join('')}</div></div>` : ''}
+                    ${renderSkillsBlock(data, 'minimal')}
                     ${educations.length ? `<div style="margin-top:0.8rem;"><div class="rm-section-title">Education</div>${educations.map(e => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.78rem;font-weight:600;">${e.degree} — ${e.school}</div><div style="font-size:0.68rem;color:#555;">${e.from || ''} — ${e.to || ''}</div></div>`).join('')}</div>` : ''}
                 </div>
             </div>`;
         } else if (data.template === 'modern') {
             html = `<div class="resume-output resume-modern">
                 <div class="mod-sidebar"><h1>${data.name}</h1><div class="mod-role">${data.role}</div><div class="mod-contact">${data.email ? `<div>✉ ${data.email}</div>` : ''}${data.phone ? `<div>📞 ${data.phone}</div>` : ''}${data.location ? `<div>📍 ${data.location}</div>` : ''}${data.portfolio ? `<div>🔗 ${data.portfolio}</div>` : ''}</div>
-                    ${skills.length ? `<div><div class="mod-section-title">Skills</div>${skills.map(s => `<div class="mod-skill-item">▸ ${s}</div>`).join('')}</div>` : ''}
+                    ${renderSkillsBlock(data, 'modern')}
                     ${educations.length ? `<div><div class="mod-section-title">Education</div>${educations.map(e => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.7rem;font-weight:600;color:#fff;">${e.degree}</div><div style="font-size:0.62rem;color:#aaa;">${e.school}</div><div style="font-size:0.6rem;color:#777;">${e.from || ''} — ${e.to || ''}</div></div>`).join('')}</div>` : ''}
                 </div>
                 <div class="mod-main">
                     <div style="margin-bottom:1rem;"><div class="mod-section-title">About</div><p style="font-size:0.72rem;color:#333;line-height:1.5;">${summary}</p></div>
                     ${experiences.length ? `<div><div class="mod-section-title">Experience</div>${experiences.map(e => `<div style="margin-bottom:0.5rem;"><div class="mod-item-title">${e.role}</div><div class="mod-item-sub">${e.company} · ${e.from || ''} — ${e.to || ''}</div><p style="font-size:0.68rem;color:#444;margin-top:0.1rem;line-height:1.4;">${e.description || e.desc || ''}</p></div>`).join('')}</div>` : ''}
+                </div>
+            </div>`;
+        } else if (data.template === 'executive') {
+            // Executive: Dark navy header, gold accents, clean professional
+            const contactItems = [
+                data.email && `✉ ${data.email}`,
+                data.phone && `📞 ${data.phone}`,
+                data.location && `📍 ${data.location}`,
+                data.portfolio && `🔗 ${data.portfolio}`,
+            ].filter(Boolean);
+            html = `<div class="resume-output resume-executive" style="font-family:'Georgia','Times New Roman',serif;color:#2c3e50;">
+                <div style="background:linear-gradient(135deg,#0a1628 0%,#0d1f3c 100%);color:#fff;padding:1.5rem 2rem 1rem;">
+                    <h1 style="font-size:1.6rem;font-weight:700;margin:0;letter-spacing:0.5px;color:#f0e6d0;">${data.name}</h1>
+                    <div style="font-size:0.85rem;color:#c8a951;margin-top:0.2rem;font-style:italic;">${data.role}</div>
+                    ${contactItems.length ? `<div style="font-size:0.65rem;color:#8899aa;margin-top:0.5rem;display:flex;flex-wrap:wrap;gap:0.6rem;border-top:1px solid rgba(200,169,81,0.3);padding-top:0.5rem;">${contactItems.map(c => `<span>${c}</span>`).join('')}</div>` : ''}
+                </div>
+                <div style="padding:1rem 2rem 1.5rem;">
+                    ${summary ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Professional Summary</div><p style="font-size:0.72rem;line-height:1.6;color:#444;margin:0;">${summary}</p></div>` : ''}
+                    ${experiences.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e8e0d0;padding-bottom:0.2rem;margin-bottom:0.4rem;">Experience</div>${experiences.map(e => `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;font-weight:700;color:#0a1628;">${e.role}</div><div style="font-size:0.7rem;color:#c8a951;font-style:italic;">${e.company} · ${e.from || ''} — ${e.to || ''}</div><div style="font-size:0.7rem;color:#555;margin-top:0.1rem;line-height:1.5;">${e.description || e.desc || ''}</div></div>`).join('')}</div>` : ''}
+                    ${renderSkillsBlock(data, 'executive')}
+                    ${educations.length ? `<div><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e8e0d0;padding-bottom:0.2rem;margin-bottom:0.3rem;">Education</div>${educations.map(e => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.75rem;font-weight:600;">${e.degree}</div><div style="font-size:0.68rem;color:#666;">${e.school} <span style="color:#999;">(${e.from || ''} — ${e.to || ''})</span></div></div>`).join('')}</div>` : ''}
+                </div>
+            </div>`;
+        } else if (data.template === 'creative') {
+            // Creative: Gradient header, colorful, rounded sections
+            const contactItems = [
+                data.email && `✉ ${data.email}`,
+                data.phone && `📞 ${data.phone}`,
+                data.location && `📍 ${data.location}`,
+                data.portfolio && `🔗 ${data.portfolio}`,
+            ].filter(Boolean);
+            html = `<div class="resume-output resume-creative" style="font-family:'Inter','Segoe UI',sans-serif;color:#2c3e50;">
+                <div style="background:linear-gradient(135deg,#1a0033 0%,#330066 50%,#006666 100%);color:#fff;padding:1.5rem 2rem 1rem;border-radius:0 0 20px 20px;">
+                    <h1 style="font-size:1.6rem;font-weight:800;margin:0;background:linear-gradient(90deg,#ff6b9d,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${data.name}</h1>
+                    <div style="font-size:0.85rem;color:#ffcc00;margin-top:0.2rem;font-weight:500;">${data.role}</div>
+                    ${contactItems.length ? `<div style="font-size:0.65rem;color:rgba(255,255,255,0.7);margin-top:0.5rem;display:flex;flex-wrap:wrap;gap:0.6rem;">${contactItems.map(c => `<span>${c}</span>`).join('')}</div>` : ''}
+                </div>
+                <div style="padding:1rem 2rem 1.5rem;">
+                    ${summary ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">✦ About</div><p style="font-size:0.72rem;line-height:1.6;color:#444;margin:0;">${summary}</p></div>` : ''}
+                    ${experiences.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✦ Experience</div>${experiences.map(e => `<div style="margin-bottom:0.5rem;background:#fafafa;border-radius:12px;padding:0.5rem 0.7rem;border-left:3px solid #00d4aa;"><div style="font-size:0.8rem;font-weight:700;color:#330066;">${e.role}</div><div style="font-size:0.7rem;color:#ff6b9d;font-weight:500;">${e.company} · ${e.from || ''} — ${e.to || ''}</div><div style="font-size:0.7rem;color:#555;margin-top:0.1rem;line-height:1.5;">${e.description || e.desc || ''}</div></div>`).join('')}</div>` : ''}
+                    ${renderSkillsBlock(data, 'creative')}
+                    ${educations.length ? `<div><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✦ Education</div>${educations.map(e => `<div style="margin-bottom:0.3rem;background:#fafafa;border-radius:10px;padding:0.4rem 0.7rem;"><div style="font-size:0.75rem;font-weight:600;color:#330066;">${e.degree}</div><div style="font-size:0.68rem;color:#666;">${e.school} <span style="color:#999;">(${e.from || ''} — ${e.to || ''})</span></div></div>`).join('')}</div>` : ''}
+                </div>
+            </div>`;
+        } else if (data.template === 'timeline') {
+            // Timeline: Left date column, right details, connecting line
+            const contactItems = [
+                data.email && `✉ ${data.email}`,
+                data.phone && `📞 ${data.phone}`,
+                data.location && `📍 ${data.location}`,
+                data.portfolio && `🔗 ${data.portfolio}`,
+            ].filter(Boolean);
+            html = `<div class="resume-output resume-timeline" style="font-family:'Inter','Segoe UI',sans-serif;color:#2c3e50;">
+                <div style="text-align:center;padding:1.5rem 2rem 0.8rem;border-bottom:3px solid #3498db;">
+                    <h1 style="font-size:1.6rem;font-weight:700;margin:0;color:#2c3e50;">${data.name}</h1>
+                    <div style="font-size:0.85rem;color:#3498db;margin-top:0.15rem;">${data.role}</div>
+                    ${contactItems.length ? `<div style="font-size:0.65rem;color:#777;margin-top:0.4rem;display:flex;justify-content:center;flex-wrap:wrap;gap:0.6rem;">${contactItems.map(c => `<span>${c}</span>`).join('')}</div>` : ''}
+                </div>
+                <div style="padding:1rem 2rem 1.5rem;">
+                    ${summary ? `<div style="margin-bottom:0.8rem;padding-left:1rem;border-left:3px solid #3498db;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Summary</div><p style="font-size:0.72rem;line-height:1.5;color:#555;margin:0;">${summary}</p></div>` : ''}
+                    ${experiences.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.4rem;">Experience</div>${experiences.map(e => `<div style="display:flex;gap:0.8rem;margin-bottom:0.6rem;position:relative;"><div style="width:80px;flex-shrink:0;text-align:right;font-size:0.65rem;color:#3498db;font-weight:600;padding-top:0.1rem;">${e.from || ''} — ${e.to || ''}</div><div style="flex:1;padding-left:0.8rem;border-left:2px solid #e0e0e0;position:relative;"><div style="position:absolute;left:-5px;top:4px;width:8px;height:8px;background:#3498db;border-radius:50%;"></div><div style="font-size:0.78rem;font-weight:600;">${e.role} — <span style="font-weight:400;color:#555;">${e.company}</span></div><div style="font-size:0.68rem;color:#666;margin-top:0.05rem;line-height:1.4;">${e.description || e.desc || ''}</div></div></div>`).join('')}</div>` : ''}
+                    ${renderSkillsBlock(data, 'timeline')}
+                    ${educations.length ? `<div><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.3rem;">Education</div>${educations.map(e => `<div style="display:flex;gap:0.8rem;margin-bottom:0.3rem;"><div style="width:80px;flex-shrink:0;text-align:right;font-size:0.65rem;color:#3498db;font-weight:600;">${e.from || ''} — ${e.to || ''}</div><div style="flex:1;padding-left:0.8rem;border-left:2px solid #e0e0e0;"><div style="font-size:0.75rem;font-weight:600;">${e.degree}</div><div style="font-size:0.68rem;color:#666;">${e.school}</div></div></div>`).join('')}</div>` : ''}
+                </div>
+            </div>`;
+        } else if (data.template === 'columns') {
+            // Columns: Two equal columns layout
+            const contactItems = [
+                data.email && `✉ ${data.email}`,
+                data.phone && `📞 ${data.phone}`,
+                data.location && `📍 ${data.location}`,
+                data.portfolio && `🔗 ${data.portfolio}`,
+            ].filter(Boolean);
+            html = `<div class="resume-output resume-columns" style="font-family:'Inter','Segoe UI',sans-serif;color:#2c3e50;">
+                <div style="padding:1.2rem 1.5rem;border-bottom:2px solid #2c3e50;text-align:center;">
+                    <h1 style="font-size:1.4rem;font-weight:700;margin:0;color:#2c3e50;">${data.name}</h1>
+                    <div style="font-size:0.8rem;color:#555;margin-top:0.1rem;">${data.role}</div>
+                    ${contactItems.length ? `<div style="font-size:0.65rem;color:#777;margin-top:0.3rem;display:flex;justify-content:center;flex-wrap:wrap;gap:0.5rem;">${contactItems.map(c => `<span>${c}</span>`).join('')}</div>` : ''}
+                </div>
+                <div style="display:flex;gap:1rem;padding:1rem 1.5rem;">
+                    <div style="flex:1;">
+                        ${summary ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.15rem;margin-bottom:0.2rem;">About</div><p style="font-size:0.7rem;line-height:1.5;color:#444;margin:0;">${summary}</p></div>` : ''}
+                        ${experiences.length ? `<div><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.15rem;margin-bottom:0.3rem;">Experience</div>${experiences.map(e => `<div style="margin-bottom:0.5rem;"><div style="font-size:0.75rem;font-weight:600;">${e.role}</div><div style="font-size:0.65rem;color:#555;">${e.company} · ${e.from || ''} — ${e.to || ''}</div><div style="font-size:0.65rem;color:#555;margin-top:0.05rem;line-height:1.4;">${e.description || e.desc || ''}</div></div>`).join('')}</div>` : ''}
+                    </div>
+                    <div style="flex:1;">
+                        ${renderSkillsBlock(data, 'columns')}
+                        ${educations.length ? `<div><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.15rem;margin-bottom:0.3rem;">Education</div>${educations.map(e => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;">${e.degree}</div><div style="font-size:0.65rem;color:#555;">${e.school} <span style="color:#999;">(${e.from || ''} — ${e.to || ''})</span></div></div>`).join('')}</div>` : ''}
+                    </div>
                 </div>
             </div>`;
         }
