@@ -267,12 +267,12 @@ document.addEventListener('DOMContentLoaded', () => {
             ].filter(c => c.value);
 
             if (mode === 'compact') {
-                return `<div><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Skills</div>
+                return `<div><div style="font-size:0.62rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.15rem;">Skills</div>
                     ${categories.map(cat => `
                         <div style="margin-bottom:0.3rem;">
-                            <div style="font-size:0.65rem;font-weight:600;color:#555;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="font-size:0.6rem;font-weight:600;color:#555;margin-bottom:0.05rem;">${cat.label}</div>
                             <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
-                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.65rem;padding:0.15rem 0.5rem;background:#f0f0f0;border-radius:2px;">${s}</span>`).join('')}
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:#f0f0f0;border-radius:2px;">${s}</span>`).join('')}
                             </div>
                         </div>
                     `).join('')}
@@ -281,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `<div class="rt-section"><div class="rt-section-title">// skills</div>
                     ${categories.map(cat => `
                         <div style="margin-bottom:0.3rem;">
-                            <div style="font-size:0.65rem;font-weight:600;color:#00cc9e;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="font-size:0.6rem;font-weight:600;color:#00cc9e;margin-bottom:0.05rem;">${cat.label}</div>
                             <div class="rt-skills">
                                 ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span class="rt-skill-tag">${s}</span>`).join('')}
                             </div>
@@ -292,9 +292,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `<div style="margin-top:0.8rem;"><div class="rm-section-title">Skills</div>
                     ${categories.map(cat => `
                         <div style="margin-top:0.3rem;">
-                            <div style="font-size:0.65rem;font-weight:600;color:#555;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="font-size:0.6rem;font-weight:600;color:#555;margin-bottom:0.05rem;">${cat.label}</div>
                             <div style="display:flex;flex-wrap:wrap;gap:0.3rem;">
-                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.65rem;padding:0.1rem 0.5rem;border:1px solid #ddd;border-radius:2px;">${s}</span>`).join('')}
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.6rem;padding:0.08rem 0.4rem;border:1px solid #ddd;border-radius:2px;">${s}</span>`).join('')}
                             </div>
                         </div>
                     `).join('')}
@@ -303,55 +303,55 @@ document.addEventListener('DOMContentLoaded', () => {
                 return `<div><div class="mod-section-title">Skills</div>
                     ${categories.map(cat => `
                         <div style="margin-bottom:0.3rem;">
-                            <div style="font-size:0.62rem;font-weight:600;color:#00ffc8;margin-bottom:0.05rem;">${cat.label}</div>
+                            <div style="font-size:0.58rem;font-weight:600;color:#00ffc8;margin-bottom:0.05rem;">${cat.label}</div>
                             ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<div class="mod-skill-item">▸ ${s}</div>`).join('')}
                         </div>
                     `).join('')}
                 </div>`;
             } else if (mode === 'executive') {
                 return `<div style="margin-bottom:0.8rem;">
-                    <div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Core Competencies</div>
+                    <div style="font-size:0.62rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.15rem;">Core Competencies</div>
                     ${categories.map(cat => `
                         <div style="margin-bottom:0.3rem;">
-                            <div style="font-size:0.65rem;font-weight:600;color:#8899aa;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="font-size:0.6rem;font-weight:600;color:#8899aa;margin-bottom:0.05rem;">${cat.label}</div>
                             <div style="display:flex;flex-wrap:wrap;gap:0.25rem;">
-                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.4rem;border:1px solid #d4c5a9;border-radius:2px;color:#2c3e50;">${s}</span>`).join('')}
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.58rem;padding:0.08rem 0.35rem;border:1px solid #d4c5a9;border-radius:2px;color:#2c3e50;">${s}</span>`).join('')}
                             </div>
                         </div>
                     `).join('')}
                 </div>`;
             } else if (mode === 'creative') {
                 return `<div style="margin-bottom:0.8rem;">
-                    <div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✦ Skills</div>
+                    <div style="font-size:0.62rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.15rem;">✦ Skills</div>
                     ${categories.map(cat => `
                         <div style="margin-bottom:0.3rem;">
-                            <div style="font-size:0.65rem;font-weight:600;color:#00d4aa;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="font-size:0.6rem;font-weight:600;color:#00d4aa;margin-bottom:0.05rem;">${cat.label}</div>
                             <div style="display:flex;flex-wrap:wrap;gap:0.25rem;">
-                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.5rem;background:rgba(255,107,157,0.1);border-radius:12px;color:#6b2fa0;font-weight:500;">${s}</span>`).join('')}
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.58rem;padding:0.08rem 0.4rem;background:rgba(255,107,157,0.1);border-radius:8px;color:#6b2fa0;font-weight:500;">${s}</span>`).join('')}
                             </div>
                         </div>
                     `).join('')}
                 </div>`;
             } else if (mode === 'timeline') {
                 return `<div style="margin-bottom:0.8rem;">
-                    <div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #3498db;padding-bottom:0.2rem;margin-bottom:0.3rem;">Skills</div>
+                    <div style="font-size:0.62rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #3498db;padding-bottom:0.15rem;margin-bottom:0.2rem;">Skills</div>
                     ${categories.map(cat => `
                         <div style="margin-bottom:0.3rem;padding-left:1rem;border-left:2px solid #e0e0e0;">
-                            <div style="font-size:0.65rem;font-weight:600;color:#3498db;margin-bottom:0.1rem;">${cat.label}</div>
+                            <div style="font-size:0.6rem;font-weight:600;color:#3498db;margin-bottom:0.05rem;">${cat.label}</div>
                             <div style="display:flex;flex-wrap:wrap;gap:0.25rem;">
-                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.4rem;background:#f8f9fa;border-radius:2px;color:#555;">${s}</span>`).join('')}
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.58rem;padding:0.08rem 0.35rem;background:#f8f9fa;border-radius:2px;color:#555;">${s}</span>`).join('')}
                             </div>
                         </div>
                     `).join('')}
                 </div>`;
             } else if (mode === 'columns') {
                 return `<div style="margin-bottom:0.8rem;">
-                    <div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #2c3e50;padding-bottom:0.2rem;margin-bottom:0.3rem;">Skills</div>
+                    <div style="font-size:0.62rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #2c3e50;padding-bottom:0.15rem;margin-bottom:0.2rem;">Skills</div>
                     ${categories.map(cat => `
                         <div style="margin-bottom:0.3rem;">
-                            <div style="font-size:0.65rem;font-weight:600;color:#555;margin-bottom:0.05rem;">${cat.label}</div>
+                            <div style="font-size:0.6rem;font-weight:600;color:#555;margin-bottom:0.05rem;">${cat.label}</div>
                             <div style="display:flex;flex-wrap:wrap;gap:0.2rem;">
-                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.6rem;padding:0.05rem 0.3rem;background:#f0f0f0;border-radius:2px;color:#333;">${s}</span>`).join('')}
+                                ${cat.value.split(',').map(s => s.trim()).filter(Boolean).map(s => `<span style="font-size:0.58rem;padding:0.05rem 0.3rem;background:#f0f0f0;border-radius:2px;color:#333;">${s}</span>`).join('')}
                             </div>
                         </div>
                     `).join('')}
@@ -363,21 +363,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!skills.length) return '';
 
             if (mode === 'compact') {
-                return `<div><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${skills.map(s => `<span style="font-size:0.65rem;padding:0.15rem 0.5rem;background:#f0f0f0;border-radius:2px;">${s}</span>`).join('')}</div></div>`;
+                return `<div><div style="font-size:0.62rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.15rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${skills.map(s => `<span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:#f0f0f0;border-radius:2px;">${s}</span>`).join('')}</div></div>`;
             } else if (mode === 'terminal') {
                 return `<div class="rt-section"><div class="rt-section-title">// skills</div><div class="rt-skills">${skills.map(s => `<span class="rt-skill-tag">${s}</span>`).join('')}</div></div>`;
             } else if (mode === 'minimal') {
-                return `<div style="margin-top:0.8rem;"><div class="rm-section-title">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.3rem;">${skills.map(s => `<span style="font-size:0.65rem;padding:0.1rem 0.5rem;border:1px solid #ddd;border-radius:2px;">${s}</span>`).join('')}</div></div>`;
+                return `<div style="margin-top:0.4rem;"><div class="rm-section-title">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.2rem;margin-top:0.15rem;">${skills.map(s => `<span style="font-size:0.6rem;padding:0.08rem 0.4rem;border:1px solid #ddd;border-radius:2px;">${s}</span>`).join('')}</div></div>`;
             } else if (mode === 'modern') {
                 return `<div><div class="mod-section-title">Skills</div>${skills.map(s => `<div class="mod-skill-item">▸ ${s}</div>`).join('')}</div>`;
             } else if (mode === 'executive') {
-                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${skills.map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.4rem;border:1px solid #d4c5a9;border-radius:2px;color:#2c3e50;">${s}</span>`).join('')}</div></div>`;
+                return `<div style="margin-bottom:0.4rem;"><div style="font-size:0.62rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.15rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.2rem;">${skills.map(s => `<span style="font-size:0.58rem;padding:0.08rem 0.35rem;border:1px solid #d4c5a9;border-radius:2px;color:#2c3e50;">${s}</span>`).join('')}</div></div>`;
             } else if (mode === 'creative') {
-                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">✦ Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">${skills.map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.5rem;background:rgba(255,107,157,0.1);border-radius:12px;color:#6b2fa0;font-weight:500;">${s}</span>`).join('')}</div></div>`;
+                return `<div style="margin-bottom:0.4rem;"><div style="font-size:0.62rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.15rem;">✦ Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.2rem;">${skills.map(s => `<span style="font-size:0.58rem;padding:0.08rem 0.4rem;background:rgba(255,107,157,0.1);border-radius:8px;color:#6b2fa0;font-weight:500;">${s}</span>`).join('')}</div></div>`;
             } else if (mode === 'timeline') {
-                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #3498db;padding-bottom:0.2rem;margin-bottom:0.3rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.25rem;padding-left:1rem;border-left:2px solid #e0e0e0;">${skills.map(s => `<span style="font-size:0.62rem;padding:0.1rem 0.4rem;background:#f8f9fa;border-radius:2px;color:#555;">${s}</span>`).join('')}</div></div>`;
+                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.62rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #3498db;padding-bottom:0.15rem;margin-bottom:0.2rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.25rem;padding-left:1rem;border-left:2px solid #e0e0e0;">${skills.map(s => `<span style="font-size:0.58rem;padding:0.08rem 0.35rem;background:#f8f9fa;border-radius:2px;color:#555;">${s}</span>`).join('')}</div></div>`;
             } else if (mode === 'columns') {
-                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #2c3e50;padding-bottom:0.2rem;margin-bottom:0.3rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.2rem;">${skills.map(s => `<span style="font-size:0.6rem;padding:0.05rem 0.3rem;background:#f0f0f0;border-radius:2px;color:#333;">${s}</span>`).join('')}</div></div>`;
+                return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.62rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #2c3e50;padding-bottom:0.15rem;margin-bottom:0.2rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.2rem;">${skills.map(s => `<span style="font-size:0.58rem;padding:0.05rem 0.3rem;background:#f0f0f0;border-radius:2px;color:#333;">${s}</span>`).join('')}</div></div>`;
             }
         }
         return '';
@@ -475,13 +475,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data.template === 'compact') {
             html = `<div class="resume-output resume-compact" style="font-family:'Segoe UI',Arial,sans-serif;color:#222;padding:1.2rem 1.5rem;">
                 <div style="border-bottom:2px solid #00cc9e;padding-bottom:0.5rem;margin-bottom:0.8rem;">
-                    <h1 style="font-size:1.4rem;font-weight:700;margin:0;color:#0a0a0e;">${data.name}</h1>
+                    <h1 style="font-size:1.2rem;font-weight:700;margin:0;color:#0a0a0e;">${data.name}</h1>
                     <div style="font-size:0.8rem;color:#555;margin-top:0.15rem;">${data.role}</div>
-                    <div style="font-size:0.65rem;color:#777;margin-top:0.3rem;display:flex;flex-wrap:wrap;gap:0.5rem;">
+                    <div style="font-size:0.6rem;color:#777;margin-top:0.2rem;display:flex;flex-wrap:wrap;gap:0.3rem;">
                         ${data.email ? `<span>✉ ${data.email}</span>` : ''}${data.phone ? `<span>📞 ${data.phone}</span>` : ''}${data.location ? `<span>📍 ${data.location}</span>` : ''}${data.portfolio ? `<span>🔗 ${data.portfolio}</span>` : ''}
                     </div>
                 </div>
-                ${summary ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Summary</div><p style="font-size:0.72rem;line-height:1.5;color:#333;margin:0;">${summary}</p></div>` : ''}
+                ${summary ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Summary</div><p style="font-size:0.65rem;line-height:1.35;color:#333;margin:0;">${summary}</p></div>` : ''}
                 ${experiences.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Experience</div>${experiences.map(e => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.78rem;font-weight:600;">${e.role} — <span style="font-weight:400;color:#555;">${e.company}</span></div><div style="font-size:0.65rem;color:#777;">${e.from || ''} — ${e.to || ''}</div><div style="font-size:0.7rem;color:#444;margin-top:0.1rem;line-height:1.4;">${e.description || e.desc || ''}</div></div>`).join('')}</div>` : ''}
                 ${educations.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Education</div>${educations.map(e => `<div style="font-size:0.75rem;margin-bottom:0.15rem;"><span style="font-weight:600;">${e.degree}</span> — ${e.school} <span style="color:#777;">(${e.from || ''} — ${e.to || ''})</span></div>`).join('')}</div>` : ''}
                 ${renderSkillsBlock(data, 'compact')}
@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="rm-header"><h1>${data.name}</h1><div class="rm-role">${data.role}</div><div class="rm-contact">${data.email ? `<span>${data.email}</span>` : ''}${data.phone ? `<span>${data.phone}</span>` : ''}${data.location ? `<span>${data.location}</span>` : ''}${data.portfolio ? `<span>${data.portfolio}</span>` : ''}</div></div>
                 <div class="rm-body">
                     <div class="rt-section-title">${'\u2500'.repeat(30)}</div>
-                    <p style="font-size:0.75rem;margin:0.5rem 0;line-height:1.5;color:#333;">${summary}</p>
+                    <p style="font-size:0.65rem;margin:0.3rem 0;line-height:1.35;color:#333;">${summary}</p>
                     ${experiences.length ? `<div style="margin-top:0.8rem;"><div class="rm-section-title">Experience</div>${experiences.map(e => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.78rem;font-weight:600;">${e.role} — ${e.company}</div><div style="font-size:0.68rem;color:#555;">${e.from || ''} — ${e.to || ''}</div><div style="font-size:0.7rem;color:#333;margin-top:0.1rem;">${e.description || e.desc || ''}</div></div>`).join('')}</div>` : ''}
                     ${renderSkillsBlock(data, 'minimal')}
                     ${educations.length ? `<div style="margin-top:0.8rem;"><div class="rm-section-title">Education</div>${educations.map(e => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.78rem;font-weight:600;">${e.degree} — ${e.school}</div><div style="font-size:0.68rem;color:#555;">${e.from || ''} — ${e.to || ''}</div></div>`).join('')}</div>` : ''}
@@ -757,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── PRINT STYLES ─────────────────────────────────────
     const printStyle = document.createElement('style');
-    printStyle.textContent = `@media print { body * { visibility: hidden; } #resume-preview, #resume-preview * { visibility: visible; } #resume-preview { position: absolute; top: 0; left: 0; width: 100%; } .resume-output { box-shadow: none; margin: 0; border-radius: 0; } @page { margin: 0; size: A4; } }`;
+    printStyle.textContent = `@media print { body * { visibility: hidden; } #resume-preview, #resume-preview * { visibility: visible; } #resume-preview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 0 !important; overflow: hidden; } .resume-output { box-shadow: none !important; margin: 0 !important; border-radius: 0 !important; padding: 0 !important; } @page { margin: 0; size: A4; } }`;
     document.head.appendChild(printStyle);
 
     // ─── TOAST STYLES ─────────────────────────────────────

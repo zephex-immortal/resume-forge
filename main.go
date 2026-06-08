@@ -357,14 +357,14 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 
 	switch data.Template {
 	case "terminal":
-		return fmt.Sprintf(`<div class="resume-output resume-terminal" style="width:210mm;min-height:297mm;background:#fff;color:#111;font-family:'Inter','Segoe UI',sans-serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
-			<div style="background:#0a0a0e;color:#00ffc8;padding:1.5rem 2rem 1rem;font-family:'Courier New',monospace;">
-				<h1 style="font-size:1.8rem;font-weight:bold;letter-spacing:-0.5px;">%s</h1>
-				<div style="color:#6a6a7a;font-size:0.85rem;margin-top:0.2rem;">%s</div>
-				<div style="display:flex;flex-wrap:wrap;gap:0.8rem;margin-top:0.6rem;font-size:0.7rem;color:#6a6a7a;">%s%s%s%s</div>
+		return fmt.Sprintf(`<div class="resume-output resume-terminal" style="width:210mm;height:297mm;background:#fff;color:#111;font-family:'Inter','Segoe UI',sans-serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
+			<div style="background:#0a0a0e;color:#00ffc8;padding:0.8rem 1.5rem 0.4rem;font-family:'Courier New',monospace;">
+				<h1 style="font-size:1.4rem;font-weight:bold;letter-spacing:-0.5px;">%s</h1>
+				<div style="color:#6a6a7a;font-size:0.75rem;margin-top:0.15rem;">%s</div>
+				<div style="display:flex;flex-wrap:wrap;gap:0.8rem;margin-top:0.6rem;font-size:0.6rem;color:#6a6a7a;">%s%s%s%s</div>
 			</div>
-			<div style="padding:1rem 2rem 2rem;color:#1a1a1a;">
-				<div style="margin-bottom:1rem;"><div style="font-size:0.8rem;font-weight:bold;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.4rem;">// summary</div><div style="font-size:0.72rem;color:#333;line-height:1.5;">%s</div></div>
+			<div style="padding:0.3rem 1.5rem 0.8rem;color:#1a1a1a;">
+				<div style="margin-bottom:0.5rem;"><div style="font-size:0.7rem;font-weight:bold;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.4rem;">// summary</div><div style="font-size:0.65rem;color:#333;line-height:1.35;">%s</div></div>
 				%s
 				%s
 				%s
@@ -382,15 +382,15 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "minimal":
-		return fmt.Sprintf(`<div class="resume-output resume-minimal" style="width:210mm;min-height:297mm;background:#fff;color:#111;font-family:'Inter','Segoe UI',sans-serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
-			<div style="text-align:center;padding:1.5rem 2rem 0.8rem;border-bottom:2px solid #111;">
-				<h1 style="font-size:1.6rem;font-weight:700;letter-spacing:1px;">%s</h1>
-				<div style="color:#555;font-size:0.85rem;margin-top:0.15rem;">%s</div>
-				<div style="font-size:0.7rem;color:#555;margin-top:0.4rem;display:flex;justify-content:center;flex-wrap:wrap;gap:0.6rem;">%s%s%s%s</div>
+		return fmt.Sprintf(`<div class="resume-output resume-minimal" style="width:210mm;height:297mm;background:#fff;color:#111;font-family:'Inter','Segoe UI',sans-serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
+			<div style="text-align:center;padding:0.8rem 1.5rem 0.4rem;border-bottom:2px solid #111;">
+				<h1 style="font-size:1.3rem;font-weight:700;letter-spacing:1px;">%s</h1>
+				<div style="color:#555;font-size:0.75rem;margin-top:0.1rem;">%s</div>
+				<div style="font-size:0.6rem;color:#555;margin-top:0.3rem;display:flex;justify-content:center;flex-wrap:wrap;gap:0.4rem;">%s%s%s%s</div>
 			</div>
-			<div style="padding:0.8rem 2rem 2rem;">
+			<div style="padding:0.3rem 1.5rem 0.8rem;">
 				<div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#111;margin-bottom:0.3rem;">%s</div>
-				<p style="font-size:0.75rem;margin:0.5rem 0;line-height:1.5;color:#333;">%s</p>
+				<p style="font-size:0.65rem;margin:0.3rem 0;line-height:1.35;color:#333;">%s</p>
 				%s%s%s
 			</div>
 		</div>`,
@@ -406,15 +406,15 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "modern":
-		return fmt.Sprintf(`<div class="resume-output resume-modern" style="width:210mm;min-height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
+		return fmt.Sprintf(`<div class="resume-output resume-modern" style="width:210mm;height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
 			<div style="width:35%%;background:#1a1a2e;color:#eee;padding:1.5rem;">
-				<h1 style="font-size:1.4rem;font-weight:700;color:#fff;">%s</h1>
-				<div style="font-size:0.75rem;color:#00ffc8;margin-top:0.2rem;">%s</div>
-				<div style="font-size:0.65rem;margin-top:0.6rem;line-height:1.6;color:#aaa;">%s%s%s%s</div>
+				<h1 style="font-size:1.2rem;font-weight:700;color:#fff;">%s</h1>
+				<div style="font-size:0.68rem;color:#00ffc8;margin-top:0.1rem;">%s</div>
+				<div style="font-size:0.6rem;margin-top:0.3rem;line-height:1.4;color:#aaa;">%s%s%s%s</div>
 				%s%s
 			</div>
 			<div style="width:65%%;padding:1.5rem;color:#1a1a1a;">
-				<div style="margin-bottom:1rem;"><div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1a1a2e;border-bottom:1px solid #eee;padding-bottom:0.2rem;margin-bottom:0.4rem;">About</div><p style="font-size:0.72rem;color:#333;line-height:1.5;">%s</p></div>
+				<div style="margin-bottom:1rem;"><div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#1a1a2e;border-bottom:1px solid #eee;padding-bottom:0.15rem;margin-bottom:0.2rem;">About</div><p style="font-size:0.65rem;color:#333;line-height:1.35;">%s</p></div>
 				%s
 			</div>
 		</div>`,
@@ -431,7 +431,7 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 
 
 	case "executive":
-		return fmt.Sprintf(`<div class="resume-output resume-executive" style="width:210mm;min-height:297mm;background:#fff;color:#222;font-family:'Georgia','Times New Roman',serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
+		return fmt.Sprintf(`<div class="resume-output resume-executive" style="width:210mm;height:297mm;background:#fff;color:#222;font-family:'Georgia','Times New Roman',serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
 			<div style="background:#0a1628;padding:1.8rem 2rem 1.2rem;text-align:center;">
 				<h1 style="font-size:1.8rem;font-weight:700;color:#fff;margin:0;letter-spacing:1px;font-family:'Georgia',serif;">%s</h1>
 				<div style="font-size:0.9rem;color:#c9a93e;margin-top:0.2rem;font-weight:600;font-style:italic;">%s</div>
@@ -456,14 +456,14 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "creative":
-		return fmt.Sprintf(`<div class="resume-output resume-creative" style="width:210mm;min-height:297mm;background:#fff;color:#222;font-family:'Poppins','Segoe UI',sans-serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
+		return fmt.Sprintf(`<div class="resume-output resume-creative" style="width:210mm;height:297mm;background:#fff;color:#222;font-family:'Poppins','Segoe UI',sans-serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
 			<div style="background:linear-gradient(135deg,#ff6b6b,#ffd93d);padding:1.5rem 2rem 1rem;text-align:center;border-radius:0 0 20px 20px;">
 				<h1 style="font-size:2rem;font-weight:800;color:#fff;margin:0;text-shadow:2px 2px 4px rgba(0,0,0,0.2);">%s</h1>
 				<div style="font-size:0.95rem;color:#fff;margin-top:0.15rem;font-weight:600;text-shadow:1px 1px 2px rgba(0,0,0,0.2);">%s</div>
 				<div style="font-size:0.7rem;color:#fff;margin-top:0.5rem;display:flex;justify-content:center;flex-wrap:wrap;gap:0.6rem;text-shadow:1px 1px 2px rgba(0,0,0,0.1);">%s%s%s%s</div>
 			</div>
 			<div style="padding:1.2rem 2rem 2rem;">
-				<div style="margin-bottom:1rem;background:#fef9ef;border-radius:12px;padding:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b6b;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✨ About Me</div><p style="font-size:0.72rem;color:#333;line-height:1.5;">%s</p></div>
+				<div style="margin-bottom:1rem;background:#fef9ef;border-radius:12px;padding:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b6b;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✨ About Me</div><p style="font-size:0.65rem;color:#333;line-height:1.35;">%s</p></div>
 				%s
 				%s
 				%s
@@ -481,14 +481,14 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "timeline":
-		return fmt.Sprintf(`<div class="resume-output resume-timeline" style="width:210mm;min-height:297mm;background:#fff;color:#222;font-family:'Inter','Segoe UI',sans-serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
+		return fmt.Sprintf(`<div class="resume-output resume-timeline" style="width:210mm;height:297mm;background:#fff;color:#222;font-family:'Inter','Segoe UI',sans-serif;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
 			<div style="background:#2d3436;padding:1.5rem 2rem 1rem;text-align:center;">
 				<h1 style="font-size:1.6rem;font-weight:700;color:#fff;margin:0;letter-spacing:0.5px;">%s</h1>
 				<div style="font-size:0.85rem;color:#dfe6e9;margin-top:0.15rem;">%s</div>
 				<div style="font-size:0.65rem;color:#b2bec3;margin-top:0.4rem;display:flex;justify-content:center;flex-wrap:wrap;gap:0.6rem;">%s%s%s%s</div>
 			</div>
 			<div style="padding:1.2rem 2rem 2rem;">
-				<div style="margin-bottom:1rem;"><div style="font-size:0.7rem;font-weight:700;color:#6c5ce7;text-transform:uppercase;letter-spacing:1.5px;border-bottom:2px solid #6c5ce7;padding-bottom:0.2rem;margin-bottom:0.4rem;">About</div><p style="font-size:0.72rem;color:#333;line-height:1.5;">%s</p></div>
+				<div style="margin-bottom:1rem;"><div style="font-size:0.7rem;font-weight:700;color:#6c5ce7;text-transform:uppercase;letter-spacing:1.5px;border-bottom:2px solid #6c5ce7;padding-bottom:0.2rem;margin-bottom:0.4rem;">About</div><p style="font-size:0.65rem;color:#333;line-height:1.35;">%s</p></div>
 				%s
 				%s
 				%s
@@ -506,14 +506,14 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "columns":
-		return fmt.Sprintf(`<div class="resume-output resume-columns" style="width:210mm;min-height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
+		return fmt.Sprintf(`<div class="resume-output resume-columns" style="width:210mm;height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;">
 			<div style="width:50%%;padding:1.5rem;border-right:1px solid #dfe6e9;">
 				<div style="margin-bottom:1rem;">
 					<h1 style="font-size:1.5rem;font-weight:700;color:#2d3436;margin:0;">%s</h1>
 					<div style="font-size:0.8rem;color:#636e72;margin-top:0.1rem;">%s</div>
 					<div style="font-size:0.65rem;color:#636e72;margin-top:0.4rem;line-height:1.6;">%s%s%s%s</div>
 				</div>
-				<div style="margin-bottom:1rem;"><div style="font-size:0.7rem;font-weight:700;color:#2d3436;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #dfe6e9;padding-bottom:0.2rem;margin-bottom:0.4rem;">Summary</div><p style="font-size:0.72rem;color:#333;line-height:1.5;">%s</p></div>
+				<div style="margin-bottom:1rem;"><div style="font-size:0.7rem;font-weight:700;color:#2d3436;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #dfe6e9;padding-bottom:0.2rem;margin-bottom:0.4rem;">Summary</div><p style="font-size:0.65rem;color:#333;line-height:1.35;">%s</p></div>
 				%s
 			</div>
 			<div style="width:50%%;padding:1.5rem;">
@@ -532,13 +532,13 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 			renderEduBlock("Education", educations, escape, "cp"),
 		)
 	default: // compact
-		return fmt.Sprintf(`<div class="resume-output resume-compact" style="width:210mm;min-height:297mm;background:#fff;color:#222;font-family:'Segoe UI',Arial,sans-serif;padding:1.2rem 1.5rem;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;">
+		return fmt.Sprintf(`<div class="resume-output resume-compact" style="width:210mm;height:297mm;background:#fff;color:#222;font-family:'Segoe UI',Arial,sans-serif;padding:0.4rem 1.2rem;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;">
 			<div style="border-bottom:2px solid #00cc9e;padding-bottom:0.5rem;margin-bottom:0.8rem;">
-				<h1 style="font-size:1.4rem;font-weight:700;margin:0;color:#0a0a0e;">%s</h1>
+				<h1 style="font-size:1.2rem;font-weight:700;margin:0;color:#0a0a0e;">%s</h1>
 				<div style="font-size:0.8rem;color:#555;margin-top:0.15rem;">%s</div>
-				<div style="font-size:0.65rem;color:#777;margin-top:0.3rem;display:flex;flex-wrap:wrap;gap:0.5rem;">%s%s%s%s</div>
+				<div style="font-size:0.6rem;color:#777;margin-top:0.2rem;display:flex;flex-wrap:wrap;gap:0.3rem;">%s%s%s%s</div>
 			</div>
-			<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Summary</div><p style="font-size:0.72rem;line-height:1.5;color:#333;margin:0;">%s</p></div>
+			<div style="margin-bottom:0.8rem;"><div style="font-size:0.62rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.15rem;">Summary</div><p style="font-size:0.72rem;line-height:1.5;color:#333;margin:0;">%s</p></div>
 			%s%s%s
 		</div>`,
 			escape(data.Name), escape(data.Role),
@@ -560,30 +560,30 @@ func renderExpBlock(title string, items []exp, escape func(string) string, style
 	}
 	var b strings.Builder
 	if style == "rt" {
-		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.8rem;font-weight:bold;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.4rem;">// %s</div>`, title))
+		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.7rem;font-weight:bold;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.15rem;margin-bottom:0.25rem;">// %s</div>`, title))
 		for _, e := range items {
-			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;font-weight:600;">%s @ %s</div><div style="font-size:0.72rem;color:#555;">%s — %s</div><div style="font-size:0.72rem;color:#333;margin-top:0.15rem;line-height:1.4;">%s</div></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.25rem;"><div style="font-size:0.72rem;font-weight:600;">%s @ %s</div><div style="font-size:0.65rem;color:#555;">%s — %s</div><div style="font-size:0.65rem;color:#333;margin-top:0.1rem;line-height:1.3;">%s</div></div>`,
 				escape(e.Role), escape(e.Company), escape(e.From), escape(e.To), escape(e.Description)))
 		}
 		b.WriteString(`</div>`)
 	} else if style == "rm" {
-		b.WriteString(fmt.Sprintf(`<div style="margin-top:0.8rem;"><div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#111;margin-bottom:0.3rem;">%s</div>`, title))
+		b.WriteString(fmt.Sprintf(`<div style="margin-top:0.4rem;"><div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#111;margin-bottom:0.2rem;">%s</div>`, title))
 		for _, e := range items {
-			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;"><div style="font-size:0.78rem;font-weight:600;">%s — %s</div><div style="font-size:0.68rem;color:#555;">%s — %s</div><div style="font-size:0.7rem;color:#333;margin-top:0.1rem;">%s</div></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.2rem;"><div style="font-size:0.72rem;font-weight:600;">%s — %s</div><div style="font-size:0.62rem;color:#555;">%s — %s</div><div style="font-size:0.62rem;color:#333;margin-top:0.05rem;">%s</div></div>`,
 				escape(e.Role), escape(e.Company), escape(e.From), escape(e.To), escape(e.Description)))
 		}
 		b.WriteString(`</div>`)
 	} else if style == "mod" {
 		b.WriteString(`<div>`)
 		for _, e := range items {
-			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;font-weight:600;">%s</div><div style="font-size:0.7rem;color:#555;">%s · %s — %s</div><p style="font-size:0.68rem;color:#444;margin-top:0.1rem;line-height:1.4;">%s</p></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.25rem;"><div style="font-size:0.72rem;font-weight:600;">%s</div><div style="font-size:0.62rem;color:#555;">%s · %s — %s</div><p style="font-size:0.62rem;color:#444;margin-top:0.05rem;line-height:1.3;">%s</p></div>`,
 				escape(e.Role), escape(e.Company), escape(e.From), escape(e.To), escape(e.Description)))
 		}
 		b.WriteString(`</div>`)
 	} else { // compact
-		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">%s</div>`, title))
+		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;"><div style="font-size:0.62rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">%s</div>`, title))
 		for _, e := range items {
-			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;"><div style="font-size:0.78rem;font-weight:600;">%s — <span style="font-weight:400;color:#555;">%s</span></div><div style="font-size:0.65rem;color:#777;">%s — %s</div><div style="font-size:0.7rem;color:#444;margin-top:0.1rem;line-height:1.4;">%s</div></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.2rem;"><div style="font-size:0.7rem;font-weight:600;">%s — <span style="font-weight:400;color:#555;">%s</span></div><div style="font-size:0.6rem;color:#777;">%s — %s</div><div style="font-size:0.62rem;color:#444;margin-top:0.05rem;line-height:1.3;">%s</div></div>`,
 				escape(e.Role), escape(e.Company), escape(e.From), escape(e.To), escape(e.Description)))
 		}
 		b.WriteString(`</div>`)
@@ -597,23 +597,23 @@ func renderEduBlock(title string, items []edu, escape func(string) string, style
 	}
 	var b strings.Builder
 	if style == "rt" {
-		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.8rem;font-weight:bold;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.4rem;">// %s</div>`, title))
+		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.7rem;font-weight:bold;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.15rem;margin-bottom:0.25rem;">// %s</div>`, title))
 		for _, e := range items {
-			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;font-weight:600;">%s</div><div style="font-size:0.72rem;color:#555;">%s</div><div style="font-size:0.65rem;color:#777;">%s — %s</div></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.2rem;"><div style="font-size:0.72rem;font-weight:600;">%s</div><div style="font-size:0.65rem;color:#555;">%s</div><div style="font-size:0.6rem;color:#777;">%s — %s</div></div>`,
 				escape(e.Degree), escape(e.School), escape(e.From), escape(e.To)))
 		}
 		b.WriteString(`</div>`)
 	} else if style == "rm" {
-		b.WriteString(fmt.Sprintf(`<div style="margin-top:0.8rem;"><div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#111;margin-bottom:0.3rem;">%s</div>`, title))
+		b.WriteString(fmt.Sprintf(`<div style="margin-top:0.4rem;"><div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#111;margin-bottom:0.2rem;">%s</div>`, title))
 		for _, e := range items {
-			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.3rem;"><div style="font-size:0.78rem;font-weight:600;">%s</div><div style="font-size:0.68rem;color:#555;">%s — %s — %s</div></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.15rem;"><div style="font-size:0.7rem;font-weight:600;">%s</div><div style="font-size:0.62rem;color:#555;">%s — %s — %s</div></div>`,
 				escape(e.Degree), escape(e.School), escape(e.From), escape(e.To)))
 		}
 		b.WriteString(`</div>`)
 	} else { // compact
-		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">%s</div>`, title))
+		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;"><div style="font-size:0.62rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.15rem;">%s</div>`, title))
 		for _, e := range items {
-			b.WriteString(fmt.Sprintf(`<div style="font-size:0.75rem;margin-bottom:0.15rem;"><span style="font-weight:600;">%s</span> — %s <span style="color:#777;">(%s — %s)</span></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="font-size:0.68rem;margin-bottom:0.1rem;"><span style="font-weight:600;">%s</span> — %s <span style="color:#777;">(%s — %s)</span></div>`,
 				escape(e.Degree), escape(e.School), escape(e.From), escape(e.To)))
 		}
 		b.WriteString(`</div>`)
@@ -632,9 +632,9 @@ func renderSkillsBlock(skills []string, escape func(string) string, style string
 	joined := strings.Join(tags, "")
 
 	if style == "rt" {
-		return fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.8rem;font-weight:bold;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.4rem;">// skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">%s</div></div>`, joined)
+		return fmt.Sprintf(`<div style="margin-bottom:0.5rem;"><div style="font-size:0.7rem;font-weight:bold;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.4rem;">// skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;">%s</div></div>`, joined)
 	}
-	return fmt.Sprintf(`<div style="margin-top:0.8rem;"><div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#111;margin-bottom:0.3rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.3rem;margin-top:0.3rem;">%s</div></div>`, joined)
+	return fmt.Sprintf(`<div style="margin-top:0.4rem;"><div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#111;margin-bottom:0.15rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.2rem;margin-top:0.15rem;">%s</div></div>`, joined)
 }
 
 func renderSkillsBlockCategorized(skills []string, categorizedSkills map[string][]string, hasCategorized bool, escape func(string) string, style string) string {
@@ -762,7 +762,7 @@ func renderSkillsByCategory(categorizedSkills map[string][]string, escape func(s
 		}
 		b.WriteString(`</div>`)
 	} else if style == "exec" {
-		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.72rem;font-weight:600;color:#c9a93e;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid #c9a93e;padding-bottom:0.2rem;margin-bottom:0.5rem;">Technical Skills</div>`))
+		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.65rem;font-weight:600;color:#c9a93e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #c9a93e;padding-bottom:0.15rem;margin-bottom:0.25rem;">Technical Skills</div>`))
 		for _, cat := range categoryOrder {
 			items, ok := categorizedSkills[cat]
 			if !ok || len(items) == 0 {
@@ -770,7 +770,7 @@ func renderSkillsByCategory(categorizedSkills map[string][]string, escape func(s
 			}
 			var tags []string
 			for _, s := range items {
-				tags = append(tags, fmt.Sprintf(`<span style="font-size:0.68rem;padding:0.1rem 0.6rem;background:#f8f6f0;border:1px solid #c9a93e;border-radius:2px;color:#222;font-family:'Georgia',serif;">%s</span>`, escape(s)))
+				tags = append(tags, fmt.Sprintf(`<span style="font-size:0.6rem;padding:0.05rem 0.4rem;background:#f8f6f0;border:1px solid #c9a93e;border-radius:2px;color:#222;font-family:'Georgia',serif;">%s</span>`, escape(s)))
 			}
 			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.25rem;"><span style="font-size:0.7rem;font-weight:600;color:#1a252c;font-family:'Georgia',serif;">%s:</span> %s</div>`, displayNames[cat], strings.Join(tags, " ")))
 		}
@@ -787,7 +787,7 @@ func renderSkillsByCategory(categorizedSkills map[string][]string, escape func(s
 			ci := 0
 			for _, s := range items {
 				c := colors[ci%len(colors)]
-				tags = append(tags, fmt.Sprintf(`<span style="font-size:0.68rem;padding:0.15rem 0.6rem;background:%s20;color:%s;border:1px solid %s;border-radius:12px;font-weight:600;">%s</span>`, c, c, c, escape(s)))
+				tags = append(tags, fmt.Sprintf(`<span style="font-size:0.6rem;padding:0.1rem 0.4rem;background:%s20;color:%s;border:1px solid %s;border-radius:8px;font-weight:500;">%s</span>`, c, c, c, escape(s)))
 				ci++
 			}
 			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.3rem;"><span style="font-size:0.7rem;font-weight:700;color:#555;">%s</span><br>%s</div>`, displayNames[cat], strings.Join(tags, " ")))
@@ -802,7 +802,7 @@ func renderSkillsByCategory(categorizedSkills map[string][]string, escape func(s
 			}
 			var tags []string
 			for _, s := range items {
-				tags = append(tags, fmt.Sprintf(`<span style="font-size:0.68rem;padding:0.1rem 0.6rem;background:#e8e0f7;color:#6c5ce7;border-radius:4px;font-weight:500;">%s</span>`, escape(s)))
+				tags = append(tags, fmt.Sprintf(`<span style="font-size:0.6rem;padding:0.05rem 0.4rem;background:#e8e0f7;color:#6c5ce7;border-radius:3px;font-weight:500;">%s</span>`, escape(s)))
 			}
 			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.2rem;"><span style="font-size:0.7rem;font-weight:600;color:#6c5ce7;">%s:</span> %s</div>`, displayNames[cat], strings.Join(tags, " ")))
 		}
@@ -816,7 +816,7 @@ func renderSkillsByCategory(categorizedSkills map[string][]string, escape func(s
 			}
 			var tags []string
 			for _, s := range items {
-				tags = append(tags, fmt.Sprintf(`<span style="font-size:0.65rem;padding:0.1rem 0.5rem;background:#e8f0fe;color:#2d3436;border-radius:3px;">%s</span>`, escape(s)))
+				tags = append(tags, fmt.Sprintf(`<span style="font-size:0.6rem;padding:0.05rem 0.3rem;background:#e8f0fe;color:#2d3436;border-radius:2px;">%s</span>`, escape(s)))
 			}
 			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.2rem;"><span style="font-size:0.68rem;font-weight:600;color:#555;">%s:</span> %s</div>`, displayNames[cat], strings.Join(tags, " ")))
 		}
@@ -847,9 +847,9 @@ func renderExpBlockExecutive(items []exp, escape func(string) string) string {
 		return ""
 	}
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.72rem;font-weight:700;color:#c9a93e;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid #c9a93e;padding-bottom:0.2rem;margin-bottom:0.5rem;font-family:'Georgia',serif;">Professional Experience</div>`))
+	b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.65rem;font-weight:700;color:#c9a93e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #c9a93e;padding-bottom:0.15rem;margin-bottom:0.25rem;font-family:'Georgia',serif;">Professional Experience</div>`))
 	for _, e := range items {
-		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.5rem;padding-bottom:0.5rem;border-bottom:1px solid #f0ede6;"><div style="font-size:0.8rem;font-weight:700;color:#0a1628;font-family:'Georgia',serif;">%s</div><div style="font-size:0.72rem;color:#555;font-style:italic;">%s</div><div style="font-size:0.65rem;color:#c9a93e;font-weight:600;">%s — %s</div><div style="font-size:0.7rem;color:#333;margin-top:0.15rem;line-height:1.5;font-family:'Georgia',serif;">%s</div></div>`,
+		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.25rem;padding-bottom:0.25rem;border-bottom:1px solid #f0ede6;"><div style="font-size:0.72rem;font-weight:700;color:#0a1628;font-family:'Georgia',serif;">%s</div><div style="font-size:0.65rem;color:#555;font-style:italic;">%s</div><div style="font-size:0.6rem;color:#c9a93e;font-weight:600;">%s — %s</div><div style="font-size:0.62rem;color:#333;margin-top:0.1rem;line-height:1.35;font-family:'Georgia',serif;">%s</div></div>`,
 			escape(e.Role), escape(e.Company), escape(e.From), escape(e.To), escape(e.Description)))
 	}
 	b.WriteString(`</div>`)
@@ -861,9 +861,9 @@ func renderEduBlockExecutive(items []edu, escape func(string) string) string {
 		return ""
 	}
 	var b strings.Builder
-	b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.72rem;font-weight:700;color:#c9a93e;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid #c9a93e;padding-bottom:0.2rem;margin-bottom:0.5rem;font-family:'Georgia',serif;">Education</div>`))
+	b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.65rem;font-weight:700;color:#c9a93e;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #c9a93e;padding-bottom:0.15rem;margin-bottom:0.25rem;font-family:'Georgia',serif;">Education</div>`))
 	for _, e := range items {
-		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.3rem;"><div style="font-size:0.78rem;font-weight:600;color:#0a1628;font-family:'Georgia',serif;">%s</div><div style="font-size:0.7rem;color:#555;">%s</div><div style="font-size:0.65rem;color:#888;">%s — %s</div></div>`,
+		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.15rem;"><div style="font-size:0.7rem;font-weight:600;color:#0a1628;font-family:'Georgia',serif;">%s</div><div style="font-size:0.62rem;color:#555;">%s</div><div style="font-size:0.6rem;color:#888;">%s — %s</div></div>`,
 			escape(e.Degree), escape(e.School), escape(e.From), escape(e.To)))
 	}
 	b.WriteString(`</div>`)
@@ -877,7 +877,7 @@ func renderExpBlockCreative(items []exp, escape func(string) string) string {
 	var b strings.Builder
 	b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.75rem;font-weight:700;color:#ff6b6b;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.4rem;">💼 Experience</div>`))
 	for _, e := range items {
-		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.5rem;background:#fff5f5;border-radius:10px;padding:0.5rem 0.7rem;border-left:4px solid #ff6b6b;"><div style="font-size:0.82rem;font-weight:700;color:#222;">%s</div><div style="font-size:0.72rem;color:#e17055;font-weight:600;">@ %s</div><div style="font-size:0.65rem;color:#888;">%s — %s</div><div style="font-size:0.7rem;color:#333;margin-top:0.1rem;line-height:1.4;">%s</div></div>`,
+		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.25rem;background:#fff5f5;border-radius:8px;padding:0.3rem 0.5rem;border-left:3px solid #ff6b6b;"><div style="font-size:0.72rem;font-weight:700;color:#222;">%s</div><div style="font-size:0.62rem;color:#e17055;font-weight:600;">@ %s</div><div style="font-size:0.6rem;color:#888;">%s — %s</div><div style="font-size:0.62rem;color:#333;margin-top:0.05rem;line-height:1.3;">%s</div></div>`,
 			escape(e.Role), escape(e.Company), escape(e.From), escape(e.To), escape(e.Description)))
 	}
 	b.WriteString(`</div>`)
@@ -891,7 +891,7 @@ func renderEduBlockCreative(items []edu, escape func(string) string) string {
 	var b strings.Builder
 	b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1rem;"><div style="font-size:0.75rem;font-weight:700;color:#6bcb77;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.4rem;">🎓 Education</div>`))
 	for _, e := range items {
-		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.3rem;background:#f0fff4;border-radius:10px;padding:0.4rem 0.7rem;border-left:4px solid #6bcb77;"><div style="font-size:0.78rem;font-weight:600;color:#222;">%s</div><div style="font-size:0.68rem;color:#555;">%s</div><div style="font-size:0.62rem;color:#888;">%s — %s</div></div>`,
+		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.15rem;background:#f0fff4;border-radius:8px;padding:0.25rem 0.5rem;border-left:3px solid #6bcb77;"><div style="font-size:0.7rem;font-weight:600;color:#222;">%s</div><div style="font-size:0.6rem;color:#555;">%s</div><div style="font-size:0.58rem;color:#888;">%s — %s</div></div>`,
 			escape(e.Degree), escape(e.School), escape(e.From), escape(e.To)))
 	}
 	b.WriteString(`</div>`)
