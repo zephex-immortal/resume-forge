@@ -723,10 +723,6 @@ func main() {
 	mux.HandleFunc("/api/generate", cors(handleGenerate))
 	mux.HandleFunc("/api/confirm", cors(handleConfirm))
 
-	// Serve static frontend files (index.html, app.js, style.css)
-	fs := http.FileServer(http.Dir("."))
-	mux.Handle("/", fs)
-
 	log.Printf("✦ Resume Forge backend on port %s", port)
 	log.Printf("✦ Gemini configured: %v", geminiKey != "")
 	if err := http.ListenAndServe(":"+port, mux); err != nil {
