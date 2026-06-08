@@ -457,6 +457,15 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
+.tmpl-desc-short {
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 0.1rem 0.3rem 0.2rem;
+    background: rgba(0,0,0,0.15);
+    border-bottom: 1px solid var(--border);
+    font-style: italic;
+}
 .tmpl-preview-body { padding: 0.5rem; min-height: 120px; }
 
 
