@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://resume-forge-blush.vercel.app/sitemap.xml

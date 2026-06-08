@@ -1,16 +1,131 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark" itemscope itemtype="https://schema.org/WebApplication">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>zephex · resume forge</title>
+    
+    <!-- Primary Meta Tags -->
+    <title>Resume Forge — AI Resume Builder | Free Online Resume Generator</title>
+    <meta name="title" content="Resume Forge — AI Resume Builder | Free Online Resume Generator">
+    <meta name="description" content="Build professional, ATS-friendly resumes in seconds with AI. 8 stunning templates, AI-powered content enhancement, and instant PDF download. Trusted by 1000+ job seekers.">
+    <meta name="keywords" content="resume builder, AI resume generator, free resume maker, professional resume, ATS-friendly resume, online resume creator, CV builder, resume templates">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Resume Forge">
+    <meta name="language" content="English">
+    <link rel="canonical" href="https://resume-forge-blush.vercel.app/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://resume-forge-blush.vercel.app/">
+    <meta property="og:title" content="Resume Forge — AI Resume Builder | Free Online Resume Generator">
+    <meta property="og:description" content="Build professional, ATS-friendly resumes in seconds with AI. 8 stunning templates, AI-powered content enhancement, and instant PDF download.">
+    <meta property="og:image" content="https://resume-forge-blush.vercel.app/og-image.svg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Resume Forge">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://resume-forge-blush.vercel.app/">
+    <meta property="twitter:title" content="Resume Forge — AI Resume Builder | Free Online Resume Generator">
+    <meta property="twitter:description" content="Build professional, ATS-friendly resumes in seconds with AI. 8 stunning templates, AI-powered content enhancement, and instant PDF download.">
+    <meta property="twitter:image" content="https://resume-forge-blush.vercel.app/og-image.svg">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Resume Forge",
+        "url": "https://resume-forge-blush.vercel.app/",
+        "description": "AI-powered resume builder with 8 professional templates, categorized skills, and instant PDF download.",
+        "applicationCategory": "Multimedia",
+        "operatingSystem": "All",
+        "browserRequirements": "Requires JavaScript",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "INR"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Sumit Kumar"
+        },
+        "featureList": [
+            "AI-powered resume generation",
+            "8 professional templates",
+            "ATS-friendly layouts",
+            "Categorized skills section",
+            "Instant PDF download",
+            "Razorpay payment integration"
+        ]
+    }
+    </script>
+    
+    <!-- FAQ Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [{
+            "@type": "Question",
+            "name": "Is Resume Forge free?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Resume generation costs just ₹10 per resume, powered by AI and professional templates."
+            }
+        }, {
+            "@type": "Question",
+            "name": "What templates are available?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "We offer 8 templates: Compact, Terminal, Minimal, Modern, Executive, Creative, Timeline, and Columns — each with unique styling for different industries."
+            }
+        }, {
+            "@type": "Question",
+            "name": "Can I download my resume as PDF?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! Use the browser print dialog (Ctrl+P) to save your resume as a PDF. It's optimized for A4 size with no extra padding."
+            }
+        }, {
+            "@type": "Question",
+            "name": "Is my resume ATS-friendly?",
+            "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes! The Compact and Executive templates are specifically designed to be ATS-compliant while maintaining visual appeal."
+            }
+        }]
+    }
+    </script>
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://checkout.razorpay.com">
+    <link rel="dns-prefetch" href="https://checkout.razorpay.com">
+    
+    <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="https://resume-forge-blush.vercel.app/og-image.svg,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+    <link rel="apple-touch-icon" href="https://resume-forge-blush.vercel.app/og-image.svg,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📄</text></svg>">
+    <meta name="theme-color" content="#0a0a0e">
 </head>
 <body>
+    <noscript>
+        <div style="padding:2rem;text-align:center;font-family:monospace;color:#fff;background:#0a0a0e;height:100vh;">
+            <h1 style="color:#00ffc8;">Resume Forge</h1>
+            <p>JavaScript is required for the resume builder. Please enable JavaScript to continue.</p>
+        </div>
+    </noscript>
+
+    <h1 class="seo-h1">Resume Forge — AI Resume Builder: Create Professional Resumes Online</h1>
+
     <!-- NAV -->
     <nav id="navbar">
         <div class="nav-inner">
-            <span class="logo"><span class="cyan">◆</span> resume<span class="cyan">forge</span></span>
+            <a href="/" class="logo" aria-label="Resume Forge - AI Resume Builder"><span class="cyan">◆</span> resume<span class="cyan">forge</span></a>
             <div class="nav-right">
                 <span class="nav-badge" id="nav-gen-count">0 generated</span>
                 <a href="#" class="nav-link" id="nav-templates-btn">templates</a>
@@ -21,9 +136,9 @@
     </nav>
 
     <!-- MAIN LAYOUT -->
-    <div id="app">
+    <main id="app">
         <!-- LEFT: Form -->
-        <div id="form-panel">
+        <section id="form-panel" role="form">
             <div class="panel-header">
                 <h2><span class="cyan">$</span> details</h2>
                 <p class="panel-sub">fill in the blanks, let AI do the magic</p>
@@ -226,15 +341,15 @@
                     <div id="gen-status" class="gen-status"></div>
                 </form>
             </div>
-        </div>
+        </section>
 
         <!-- RIGHT: Preview -->
-        <div id="preview-panel">
+        <section id="preview-panel" role="region" aria-label="Resume Preview">
             <div class="panel-header">
                 <h2><span class="cyan">#</span> preview</h2>
                 <div class="preview-actions">
-                    <button class="btn-icon-only" id="download-pdf" title="download PDF">⬇</button>
-                    <button class="btn-icon-only" id="copy-html" title="copy HTML">📋</button>
+                    <button class="btn-icon-only" id="download-pdf" title="download PDF" aria-label="Download as PDF">⬇</button>
+                    <button class="btn-icon-only" id="copy-html" title="copy HTML" aria-label="Copy HTML code">📋</button>
                 </div>
             </div>
             <div id="resume-preview">
@@ -244,8 +359,8 @@
                     <span class="ph-sub">your resume will preview here</span>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
     <!-- TEMPLATES MODAL -->
     <div id="templates-modal" class="modal hidden">

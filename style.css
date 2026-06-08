@@ -31,6 +31,7 @@ body {
 }
 
 .cyan { color: var(--cyan); }
+.seo-h1 { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .dim { color: var(--text-dim); }
 .mt { margin-top: 1rem; }
 .hidden { display: none !important; }

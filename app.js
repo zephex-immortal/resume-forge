@@ -97,37 +97,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ─── EXPERIENCE ENTRIES ─────────────────────────────────
-    function createExpEntry(data) {
+    function createExpEntry(data, idx) {
         const div = document.createElement('div');
         div.className = 'exp-entry';
         div.innerHTML = `
             <div class="exp-header">
                 <span class="exp-counter">#${expContainer.children.length + 1}</span>
-                <button type="button" class="remove-entry" title="remove">✕</button>
+                <button type="button" class="remove-entry" title="remove" aria-label="Remove entry">✕</button>
             </div>
             <div class="form-row">
                 <div class="form-group flex-1">
-                    <label>company</label>
-                    <input type="text" class="exp-company" value="${data?.company || ''}" placeholder="Google">
+                    <label for="exp-company">company</label>
+                    <input type="text" class="exp-company" id="exp-company" value="${data?.company || ''}" placeholder="Google">
                 </div>
                 <div class="form-group flex-1">
-                    <label>role</label>
-                    <input type="text" class="exp-role" value="${data?.role || ''}" placeholder="Software Engineer">
+                    <label for="exp-role">role</label>
+                    <input type="text" class="exp-role" id="exp-role" value="${data?.role || ''}" placeholder="Software Engineer">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group flex-1">
-                    <label>from</label>
-                    <input type="text" class="exp-from" value="${data?.from || ''}" placeholder="2024">
+                    <label for="exp-from">from</label>
+                    <input type="text" class="exp-from" id="exp-from" value="${data?.from || ''}" placeholder="2024">
                 </div>
                 <div class="form-group flex-1">
-                    <label>to</label>
-                    <input type="text" class="exp-to" value="${data?.to || ''}" placeholder="Present">
+                    <label for="exp-to">to</label>
+                    <input type="text" class="exp-to" id="exp-to" value="${data?.to || ''}" placeholder="Present">
                 </div>
             </div>
             <div class="form-group">
-                <label>description (optional — AI can expand)</label>
-                <textarea class="exp-desc" rows="2" placeholder="What you did...">${data?.desc || ''}</textarea>
+                <label for="exp-desc">description (optional — AI can expand)</label>
+                <textarea class="exp-desc" id="exp-desc" rows="2" placeholder="What you did...">${data?.desc || ''}</textarea>
             </div>
         `;
         div.querySelector('.remove-entry').addEventListener('click', () => {
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('add-exp').addEventListener('click', () => {
-        expContainer.appendChild(createExpEntry());
+        expContainer.appendChild(createExpEntry(null, expContainer.children.length));
         updateExpCounters();
     });
 
@@ -153,22 +153,22 @@ document.addEventListener('DOMContentLoaded', () => {
         div.innerHTML = `
             <div class="exp-header">
                 <span class="exp-counter">#${eduContainer.children.length + 1}</span>
-                <button type="button" class="remove-entry" title="remove">✕</button>
+                <button type="button" class="remove-entry" title="remove" aria-label="Remove entry">✕</button>
             </div>
             <div class="form-row">
                 <div class="form-group flex-1">
-                    <label>school</label>
-                    <input type="text" class="edu-school" value="${data?.school || ''}" placeholder="University Name">
+                    <label for="edu-school">school</label>
+                    <input type="text" class="edu-school" id="edu-school" value="${data?.school || ''}" placeholder="University Name">
                 </div>
                 <div class="form-group flex-1">
-                    <label>degree</label>
-                    <input type="text" class="edu-degree" value="${data?.degree || ''}" placeholder="B.Tech CSE">
+                    <label for="edu-degree">degree</label>
+                    <input type="text" class="edu-degree" id="edu-degree" value="${data?.degree || ''}" placeholder="B.Tech CSE">
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group flex-1">
-                    <label>from</label>
-                    <input type="text" class="edu-from" value="${data?.from || ''}" placeholder="2024">
+                    <label for="edu-from">from</label>
+                    <input type="text" class="edu-from" id="edu-from" value="${data?.from || ''}" placeholder="2024">
                 </div>
                 <div class="form-group flex-1">
                     <label>to</label>
@@ -218,8 +218,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="hi-meta">${item.role || ''} · ${item.template || ''} · ${dateStr} ${timeStr}</div>
                 </div>
                 <div class="hi-actions">
-                    <button class="hi-btn" id="load-history-${idx}" data-idx="${idx}" title="View">👁</button>
-                    <button class="hi-btn hi-del" data-id="${item.id}" title="Delete">🗑</button>
+                    <button class="hi-btn" id="load-history-${idx}" data-idx="${idx}" title="View" aria-label="View resume">👁</button>
+                    <button class="hi-btn hi-del" data-id="${item.id}" title="Delete" aria-label="Delete resume">🗑</button>
                 </div>
             </div>`;
         }).join('');
@@ -455,8 +455,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Experience
         expContainer.innerHTML = '';
-        (data.experience || []).forEach(e => expContainer.appendChild(createExpEntry(e)));
-        if (!data.experience?.length) expContainer.appendChild(createExpEntry());
+        (data.experience || []).forEach((e, i) => expContainer.appendChild(createExpEntry(e, i)));
+        if (!data.experience?.length) expContainer.appendChild(createExpEntry(null, expContainer.children.length));
         updateExpCounters();
 
         // Education
@@ -710,6 +710,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('resumeForgeCount', String(state.genCount));
             updateGenCountDisplay();
 
+            document.title = `Resume - ${data.name} | Resume Forge`;
             genStatus.textContent = '✅ resume ready! download or copy below';
             showToast('🎉 Resume generated successfully!', 'success');
 
@@ -741,7 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!content) { showToast('Generate a resume first', 'warn'); return; }
         document.title = `resume-${document.getElementById('name').value || 'untitled'}`;
         window.print();
-        document.title = 'resume forge';
+        document.title = 'Resume Forge — AI Resume Builder | Free Online Resume Generator';
     });
 
     // ─── COPY HTML ────────────────────────────────────────
@@ -765,5 +766,4 @@ document.addEventListener('DOMContentLoaded', () => {
     toastStyle.textContent = `.toast-msg { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(10px); padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.78rem; font-family: var(--font); z-index: 9999; opacity: 0; transition: all 0.3s ease; pointer-events: none; border: 1px solid var(--border); } .toast-msg.show { opacity: 1; transform: translateX(-50%) translateY(0); } .toast-success { background: rgba(0,255,200,0.1); color: var(--cyan); border-color: rgba(0,255,200,0.3); } .toast-error { background: rgba(255,51,85,0.1); color: var(--red); border-color: rgba(255,51,85,0.3); } .toast-warn { background: rgba(255,204,0,0.1); color: var(--yellow); border-color: rgba(255,204,0,0.3); } .toast-info { background: rgba(0,102,255,0.1); color: #66aaff; border-color: rgba(0,102,255,0.3); }`;
     document.head.appendChild(toastStyle);
 
-    console.log('✦ resume forge — production ready');
 });
