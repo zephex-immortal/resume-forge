@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>zephex · resume forge</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- NAV -->
+    <nav id="navbar">
+        <div class="nav-inner">
+            <span class="logo"><span class="cyan">◆</span> resume<span class="cyan">forge</span></span>
+            <div class="nav-right">
+                <span class="nav-badge" id="nav-gen-count">0 generated</span>
+                <a href="#" class="nav-link" id="nav-templates-btn">templates</a>
+                <a href="#" class="nav-link" id="nav-about-btn">about</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN LAYOUT -->
+    <div id="app">
+        <!-- LEFT: Form -->
+        <div id="form-panel">
+            <div class="panel-header">
+                <h2><span class="cyan">$</span> details</h2>
+                <p class="panel-sub">fill in the blanks, let AI do the magic</p>
+            </div>
+
+            <div class="form-scroll">
+                <form id="resume-form" autocomplete="off">
+                    <!-- API Key -->
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label><span class="cyan">🔑</span> Gemini API Key</label>
+                            <input type="password" id="api-key" placeholder="AIza..." required>
+                            <span class="field-hint">get one free at aistudio.google.com/app/apikey</span>
+                        </div>
+                    </div>
+
+                    <!-- Personal -->
+                    <div class="form-section">
+                        <div class="section-label"><span class="cyan">▸</span> personal</div>
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label>name</label>
+                                <input type="text" id="name" placeholder="Sumit Kumar">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label>role</label>
+                                <input type="text" id="role" placeholder="Full-Stack Developer">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label>email</label>
+                                <input type="email" id="email" placeholder="hi@zephex.in">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label>phone</label>
+                                <input type="text" id="phone" placeholder="+91 98765 43210">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label>location</label>
+                                <input type="text" id="location" placeholder="Chandigarh, India">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label>portfolio / github</label>
+                                <input type="text" id="portfolio" placeholder="github.com/real-zephex">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary -->
+                    <div class="form-section">
+                        <div class="section-label"><span class="cyan">▸</span> summary</div>
+                        <div class="form-group">
+                            <textarea id="summary" rows="3" placeholder="Brief about yourself... (or leave blank for AI to generate)"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Experience -->
+                    <div class="form-section">
+                        <div class="section-label"><span class="cyan">▸</span> experience</div>
+                        <div id="exp-container">
+                            <div class="exp-entry">
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label>company</label>
+                                        <input type="text" class="exp-company" placeholder="Google">
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label>role</label>
+                                        <input type="text" class="exp-role" placeholder="Software Engineer">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label>from</label>
+                                        <input type="text" class="exp-from" placeholder="2024">
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label>to</label>
+                                        <input type="text" class="exp-to" placeholder="Present">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>description (optional — AI can expand)</label>
+                                    <textarea class="exp-desc" rows="2" placeholder="What you did..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-sm" id="add-exp">+ add experience</button>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="form-section">
+                        <div class="section-label"><span class="cyan">▸</span> education</div>
+                        <div id="edu-container">
+                            <div class="edu-entry">
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label>school</label>
+                                        <input type="text" class="edu-school" placeholder="University Name">
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label>degree</label>
+                                        <input type="text" class="edu-degree" placeholder="B.Tech CSE">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group flex-1">
+                                        <label>from</label>
+                                        <input type="text" class="edu-from" placeholder="2024">
+                                    </div>
+                                    <div class="form-group flex-1">
+                                        <label>to</label>
+                                        <input type="text" class="edu-to" placeholder="2028">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-sm" id="add-edu">+ add education</button>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="form-section">
+                        <div class="section-label"><span class="cyan">▸</span> skills</div>
+                        <div class="form-group">
+                            <label>comma separated</label>
+                            <input type="text" id="skills" placeholder="TypeScript, Go, Python, Next.js, Supabase">
+                        </div>
+                    </div>
+
+                    <!-- Template -->
+                    <div class="form-section">
+                        <div class="section-label"><span class="cyan">▸</span> template</div>
+                        <div class="template-selector">
+                            <label class="tmpl-option" data-tmpl="compact">
+                                <input type="radio" name="template" value="compact" hidden>
+                                <span class="tmpl-name">compact</span>
+                                <span class="tmpl-desc">ATS-friendly</span>
+                            </label>
+                            <label class="tmpl-option selected" data-tmpl="terminal">
+                                <input type="radio" name="template" value="terminal" checked hidden>
+                                <span class="tmpl-name">terminal</span>
+                                <span class="tmpl-desc">hacker aesthetic</span>
+                            </label>
+                            <label class="tmpl-option" data-tmpl="minimal">
+                                <input type="radio" name="template" value="minimal" hidden>
+                                <span class="tmpl-name">minimal</span>
+                                <span class="tmpl-desc">clean & sharp</span>
+                            </label>
+                            <label class="tmpl-option" data-tmpl="modern">
+                                <input type="radio" name="template" value="modern" hidden>
+                                <span class="tmpl-name">modern</span>
+                                <span class="tmpl-desc">split layout</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Generate -->
+                    <button type="submit" class="btn-generate" id="gen-btn">
+                        <span class="btn-icon">⚡</span>
+                        <span class="btn-text">generate resume</span>
+                        <span class="btn-price">₹10</span>
+                    </button>
+                    <div id="gen-status" class="gen-status"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- RIGHT: Preview -->
+        <div id="preview-panel">
+            <div class="panel-header">
+                <h2><span class="cyan">#</span> preview</h2>
+                <div class="preview-actions">
+                    <button class="btn-icon-only" id="download-pdf" title="download PDF">⬇</button>
+                    <button class="btn-icon-only" id="copy-html" title="copy HTML">📋</button>
+                </div>
+            </div>
+            <div id="resume-preview">
+                <div class="preview-placeholder">
+                    <span class="ph-icon">📄</span>
+                    <span class="ph-text">fill in details and generate</span>
+                    <span class="ph-sub">your resume will preview here</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEMPLATES MODAL -->
+    <div id="templates-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><span class="cyan">#</span> templates</h3>
+                <button class="modal-close" id="modal-close">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="tmpl-showcase">
+                    <div class="tmpl-preview-card" data-tmpl="compact">
+                        <div class="tmpl-preview-header">compact</div>
+                        <div class="tmpl-preview-body">
+                            <div class="tpc-line" style="width:80%"></div>
+                            <div class="tpc-line short"></div>
+                            <div style="height:2px;background:var(--cyan-dim);margin:0.4rem 0;"></div>
+                            <div class="tpc-line"></div>
+                            <div class="tpc-line short"></div>
+                        </div>
+                    </div>
+                    <div class="tmpl-preview-card" data-tmpl="terminal">
+                        <div class="tmpl-preview-header">terminal</div>
+                        <div class="tmpl-preview-body">
+                            <div class="tpc-bar"></div>
+                            <div class="tpc-line"></div>
+                            <div class="tpc-line short"></div>
+                            <div class="tpc-block"></div>
+                            <div class="tpc-line"></div>
+                            <div class="tpc-line short"></div>
+                        </div>
+                    </div>
+                    <div class="tmpl-preview-card" data-tmpl="minimal">
+                        <div class="tmpl-preview-header">minimal</div>
+                        <div class="tmpl-preview-body">
+                            <div class="tpc-line"></div>
+                            <div class="tpc-line short"></div>
+                            <div class="tpc-block thin"></div>
+                            <div class="tpc-line"></div>
+                            <div class="tpc-line short"></div>
+                        </div>
+                    </div>
+                    <div class="tmpl-preview-card" data-tmpl="modern">
+                        <div class="tmpl-preview-header">modern</div>
+                        <div class="tmpl-preview-body split-demo">
+                            <div class="split-left-demo">
+                                <div class="tpc-line"></div>
+                                <div class="tpc-line short"></div>
+                            </div>
+                            <div class="split-right-demo">
+                                <div class="tpc-line"></div>
+                                <div class="tpc-line short"></div>
+                                <div class="tpc-line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT MODAL -->
+    <div id="about-modal" class="modal hidden">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3><span class="cyan">#</span> about</h3>
+                <button class="modal-close about-close">✕</button>
+            </div>
+            <div class="modal-body about-body">
+                <p><span class="cyan">resume forge</span> v0.1</p>
+                <p class="dim">AI-powered resume generator by zephex.</p>
+                <p class="dim mt">Powered by Gemini API · ₹10 per generation</p>
+                <p class="dim">Templates: Compact · Terminal · Minimal · Modern</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
