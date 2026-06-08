@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // Step 1: Create order via backend
             genStatus.textContent = '⏳ creating payment order...';
-            const orderRes = await fetch('http://localhost:7001/api/generate', {
+            const orderRes = await fetch('http://localhost:3000/api/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
             genStatus.textContent = '⏳ payment verified! generating resume...';
             genBtn.querySelector('.btn-text').textContent = 'generating...';
 
-            const confirmRes = await fetch('http://localhost:7001/api/confirm', {
+            const confirmRes = await fetch('http://localhost:3000/api/confirm', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

@@ -678,7 +678,7 @@ func handleConfirm(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	port := "7001"
+	port := "3000"
 	if p := os.Getenv("PORT"); p != "" {
 		port = p
 	}
