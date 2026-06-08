@@ -391,10 +391,56 @@ For each experience entry, expand the description to include specific achievemen
 
         state.isGenerating = true;
         genBtn.disabled = true;
-        genStatus.textContent = '⏳ generating...';
-        genBtn.querySelector('.btn-text').textContent = 'generating...';
+        genStatus.textContent = '⏳ creating payment order...';
+        genBtn.querySelector('.btn-text').textContent = 'payment...';
 
         try {
+            // Step 1: Create Razorpay order
+            const orderRes = await fetch('http://localhost:7001/api/create-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: 1000 }), // ₹10
+            });
+            if (!orderRes.ok) throw new Error('Failed to create payment order');
+            const order = await orderRes.json();
+
+            // Step 2: Open Razorpay checkout
+            const paymentResult = await new Promise((resolve, reject) => {
+                const rzp = new Razorpay({
+                    key: order.key,
+                    order_id: order.order_id,
+                    amount: order.amount,
+                    currency: 'INR',
+                    name: 'Resume Forge',
+                    description: 'AI Resume Generation',
+                    handler: function(response) {
+                        resolve(response);
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            reject(new Error('Payment cancelled'));
+                        }
+                    },
+                    prefill: {
+                        name: data.name,
+                        email: data.email,
+                        contact: data.phone,
+                    },
+                    theme: { color: '#00ffc8' },
+                });
+                rzp.open();
+            });
+
+            genStatus.textContent = '⏳ payment received! generating resume...';
+
+            // Step 3: Verify payment (fire and forget — we still generate resume)
+            fetch('http://localhost:7001/api/verify-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(paymentResult),
+            }).catch(() => {});
+
+            // Step 4: Generate resume with AI
             const aiContent = await generateResumeContent(data);
             renderResume(data, aiContent);
 
@@ -404,9 +450,16 @@ For each experience entry, expand the description to include specific achievemen
 
             genStatus.textContent = '✅ resume generated!';
         } catch (err) {
-            genStatus.textContent = `❌ ${err.message || 'generation failed'}`;
-            // Still render with raw data even if AI fails
-            renderResume(data, null);
+            if (err.message === 'Payment cancelled') {
+                genStatus.textContent = '[!] payment was cancelled';
+            } else {
+                genStatus.textContent = `❌ ${err.message || 'something went wrong'}`;
+                // Still render without AI if it fails after payment
+                if (!err.message.includes('Payment') && !err.message.includes('Failed to create')) {
+                    renderResume(data, null);
+                    genStatus.textContent = '✅ resume generated (AI failed, used raw data)';
+                }
+            }
         }
 
         state.isGenerating = false;
