@@ -458,14 +458,7 @@ body {
     letter-spacing: 0.5px;
 }
 .tmpl-preview-body { padding: 0.5rem; min-height: 120px; }
-.tpc-bar { height: 20px; background: #0a0a0e; border-radius: 2px; margin-bottom: 0.4rem; }
-.tpc-line { height: 6px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-bottom: 0.3rem; }
-.tpc-line.short { width: 60%; }
-.tpc-block { height: 40px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-bottom: 0.4rem; }
-.tpc-block.thin { height: 20px; }
-.split-demo { display: flex; gap: 0.3rem; }
-.split-left-demo { width: 35%; background: rgba(26,26,46,0.5); padding: 0.3rem; border-radius: 2px; }
-.split-right-demo { flex: 1; padding: 0.3rem; }
+
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
