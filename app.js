@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const navCount = document.getElementById("nav-gen-count");
   const expContainer = document.getElementById("exp-container");
   const eduContainer = document.getElementById("edu-container");
+  const projContainer = document.getElementById("proj-container");
   const historyList = document.getElementById("history-list");
   const emptyHistory = document.getElementById("empty-history");
   const historyPanel = document.getElementById("history-panel");
@@ -220,6 +221,53 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("add-edu").addEventListener("click", () => {
     eduContainer.appendChild(createEduEntry());
     updateEduCounters();
+  });
+
+  // ─── PROJECT ENTRIES ─────────────────────────────────────
+  function createProjEntry(data) {
+    const entryId = Math.random().toString(36).slice(2, 9);
+    const div = document.createElement("div");
+    div.className = "proj-entry";
+    div.innerHTML = `
+            <div class="exp-header">
+                <span class="proj-counter">#${projContainer.children.length + 1}</span>
+                <button type="button" class="remove-entry" title="remove" aria-label="Remove entry">✕</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="proj-title-${entryId}">project title</label>
+                    <input type="text" class="proj-title" id="proj-title-${entryId}" value="${data?.title || ""}" placeholder="Project Name">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="proj-desc-${entryId}">project description (one liner)</label>
+                    <input type="text" class="proj-desc" id="proj-desc-${entryId}" value="${data?.desc || data?.description || ""}" placeholder="A brief one-sentence description of what the project does.">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="proj-tech-${entryId}">tech stack</label>
+                    <input type="text" class="proj-tech" id="proj-tech-${entryId}" value="${data?.tech || data?.tech_stack || ""}" placeholder="Go, React, Tailwind CSS">
+                </div>
+            </div>
+        `;
+    div.querySelector(".remove-entry").addEventListener("click", () => {
+      div.remove();
+      updateProjCounters();
+    });
+    return div;
+  }
+
+  function updateProjCounters() {
+    document
+      .querySelectorAll(".proj-counter")
+      .forEach((c, i) => (c.textContent = `#${i + 1}`));
+  }
+
+  document.getElementById("add-proj").addEventListener("click", () => {
+    projContainer.appendChild(createProjEntry());
+    updateProjCounters();
   });
 
   // ─── HISTORY ────────────────────────────────────────────
@@ -548,6 +596,14 @@ document.addEventListener("DOMContentLoaded", () => {
         to: el.querySelector(".edu-to")?.value || "",
       });
     });
+    const projs = [];
+    document.querySelectorAll(".proj-entry").forEach((el) => {
+      projs.push({
+        title: el.querySelector(".proj-title")?.value || "",
+        desc: el.querySelector(".proj-desc")?.value || "",
+        tech: el.querySelector(".proj-tech")?.value || "",
+      });
+    });
     return {
       name: document.getElementById("name").value.trim() || "Your Name",
       role: document.getElementById("role").value.trim() || "Developer",
@@ -567,6 +623,7 @@ document.addEventListener("DOMContentLoaded", () => {
       skills_cloud: document.getElementById("skills-cloud").value.trim() || "",
       experience: exps.filter((e) => e.company && e.role),
       education: edus.filter((e) => e.school && e.degree),
+      projects: projs.filter((p) => p.title),
       template: state.template,
     };
   }
@@ -633,6 +690,15 @@ document.addEventListener("DOMContentLoaded", () => {
       eduContainer.appendChild(createEduEntry(e)),
     );
     if (!data.education?.length) eduContainer.appendChild(createEduEntry());
+    updateEduCounters();
+
+    // Projects
+    projContainer.innerHTML = "";
+    (data.projects || []).forEach((p) =>
+      projContainer.appendChild(createProjEntry(p)),
+    );
+    if (!data.projects?.length) projContainer.appendChild(createProjEntry());
+    updateProjCounters();
   }
 
   // ─── RENDER RESUME ─────────────────────────────────────
@@ -975,5 +1041,10 @@ document.addEventListener("DOMContentLoaded", () => {
     eduContainer.innerHTML = "";
     eduContainer.appendChild(createEduEntry());
     updateEduCounters();
+  }
+  if (projContainer && projContainer.querySelector(".proj-entry")) {
+    projContainer.innerHTML = "";
+    projContainer.appendChild(createProjEntry());
+    updateProjCounters();
   }
 });
