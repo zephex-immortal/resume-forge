@@ -47,6 +47,11 @@ type GenerateRequest struct {
 	Portfolio        string            `json:"portfolio"`
 	Summary          string            `json:"summary"`
 	Skills           string            `json:"skills"`
+	SkillsLanguages  string            `json:"skills_languages"`
+	SkillsFrameworks string            `json:"skills_frameworks"`
+	SkillsTools      string            `json:"skills_tools"`
+	SkillsDatabases  string            `json:"skills_databases"`
+	SkillsCloud      string            `json:"skills_cloud"`
 	SkillsCategories SkillsCategories  `json:"skills_categories"`
 	Experience       []ExpEntry        `json:"experience"`
 	Education        []EduEntry        `json:"education"`
@@ -59,6 +64,19 @@ type SkillsCategories struct {
 	Tools      string `json:"skills_tools"`
 	Databases  string `json:"skills_databases"`
 	Cloud      string `json:"skills_cloud"`
+}
+
+// normalizeSkills copies flat skill fields into SkillsCategories if the nested object is empty
+func normalizeSkills(req *GenerateRequest) {
+	if req.SkillsCategories.Languages == "" && req.SkillsCategories.Frameworks == "" && 
+	   req.SkillsCategories.Tools == "" && req.SkillsCategories.Databases == "" && 
+	   req.SkillsCategories.Cloud == "" {
+		req.SkillsCategories.Languages = req.SkillsLanguages
+		req.SkillsCategories.Frameworks = req.SkillsFrameworks
+		req.SkillsCategories.Tools = req.SkillsTools
+		req.SkillsCategories.Databases = req.SkillsDatabases
+		req.SkillsCategories.Cloud = req.SkillsCloud
+	}
 }
 
 type ExpEntry struct {
@@ -989,6 +1007,7 @@ func handleGenerate(w http.ResponseWriter, r *http.Request) {
 		writeError(w, "Invalid request body", 400)
 		return
 	}
+	normalizeSkills(&req)
 
 	if req.Name == "" {
 		writeError(w, "Name is required", 400)
@@ -1032,6 +1051,7 @@ func handleConfirm(w http.ResponseWriter, r *http.Request) {
 		writeError(w, "Invalid request body", 400)
 		return
 	}
+	normalizeSkills(&req.GenerateRequest)
 
 	if req.Name == "" || req.OrderID == "" || req.PaymentID == "" || req.Signature == "" {
 		writeError(w, "Missing required fields", 400)
