@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
         return {
-            apiKey: document.getElementById('api-key').value,
+            // API key now handled server-side
             name: document.getElementById('name').value.trim() || 'Your Name',
             role: document.getElementById('role').value.trim() || 'Developer',
             email: document.getElementById('email').value.trim() || '',
@@ -274,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── FILL FORM FROM HISTORY ────────────────────────────
     function fillFormFromData(data) {
-        if (data.apiKey) document.getElementById('api-key').value = data.apiKey;
+        // API key handled server-side
         if (data.name) document.getElementById('name').value = data.name;
         if (data.role) document.getElementById('role').value = data.role;
         if (data.email) document.getElementById('email').value = data.email;
@@ -302,77 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ─── GENERATE WITH GEMINI ──────────────────────────────
-    async function generateResumeContent(data) {
-        const prompt = `You are a professional resume writer. Generate a JSON resume for a person with these details:
-
-Name: ${data.name}
-Role: ${data.role}
-Email: ${data.email}
-Phone: ${data.phone}
-Location: ${data.location}
-Portfolio: ${data.portfolio}
-
-Summary: ${data.summary || 'Generate a professional summary based on their experience.'}
-
-Experience: ${JSON.stringify(data.experience)}
-Education: ${JSON.stringify(data.education)}
-Skills: ${data.skills}
-
-Return ONLY valid JSON with this exact structure (no markdown, no code fences):
-{
-  "summary": "well written professional summary...",
-  "experience": [
-    {"company": "...", "role": "...", "from": "...", "to": "...", "description": "expanded professional description with achievements..."}
-  ],
-  "education": [
-    {"school": "...", "degree": "...", "from": "...", "to": "..."}
-  ]
-}
-
-For each experience entry, expand the description to include specific achievements and responsibilities. Make it compelling and professional. Be specific. Use numbers and results where possible.`;
-
-        const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 30000);
-
-        try {
-            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${data.apiKey}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }],
-                    generationConfig: { temperature: 0.7, maxOutputTokens: 2048 },
-                }),
-                signal: controller.signal,
-            });
-            clearTimeout(timeout);
-
-            if (!res.ok) {
-                const err = await res.json().catch(() => ({ error: { message: res.statusText } }));
-                throw new Error(err.error?.message || `HTTP ${res.status}`);
-            }
-
-            const json = await res.json();
-            const text = json.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-            let jsonStr = text;
-            const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-            if (jsonMatch) jsonStr = jsonMatch[1];
-
-            try {
-                return JSON.parse(jsonStr);
-            } catch {
-                return {
-                    summary: text.substring(0, 500),
-                    experience: data.experience,
-                    education: data.education,
-                };
-            }
-        } catch (err) {
-            clearTimeout(timeout);
-            if (err.name === 'AbortError') throw new Error('AI request timed out');
-            throw err;
-        }
-    }
+    
 
     // ─── RENDER RESUME ─────────────────────────────────────
     function renderResume(data, aiContent) {
@@ -442,28 +372,33 @@ For each experience entry, expand the description to include specific achievemen
         if (state.isGenerating) return;
 
         const data = getFormData();
-        if (!data.apiKey) {
-            genStatus.textContent = '[!] enter your Gemini API key';
-            showToast('Enter your Gemini API key', 'error');
+        if (!data.name || data.name === 'Your Name') {
+            genStatus.textContent = '[!] enter your name';
+            showToast('Enter your name', 'error');
             return;
         }
 
-        let paymentReceived = false;
-
         state.isGenerating = true;
         genBtn.disabled = true;
-        genBtn.querySelector('.btn-text').textContent = 'processing...';
-        genStatus.textContent = '⏳ creating payment order...';
+        genBtn.querySelector('.btn-text').textContent = 'creating order...';
+        genStatus.textContent = '⏳ setting up payment...';
 
         try {
-            // Step 1: Create Razorpay order
-            const orderRes = await fetch('http://localhost:7001/api/create-order', {
+            // Step 1: Create order via backend
+            genStatus.textContent = '⏳ creating payment order...';
+            const orderRes = await fetch('http://localhost:7001/api/generate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: 1000 }),
+                body: JSON.stringify(data),
             });
-            if (!orderRes.ok) throw new Error('Payment service unavailable');
+
+            if (!orderRes.ok) {
+                const err = await orderRes.json().catch(() => ({ message: 'Payment service unavailable' }));
+                throw new Error(err.message || 'Payment service unavailable');
+            }
+
             const order = await orderRes.json();
+            if (!order.success) throw new Error(order.message || 'Order creation failed');
 
             // Step 2: Open Razorpay checkout
             genStatus.textContent = '💳 complete payment to continue...';
@@ -483,43 +418,42 @@ For each experience entry, expand the description to include specific achievemen
                 rzp.open();
             });
 
-            // Payment succeeded
-            paymentReceived = true;
-            genStatus.textContent = '✅ payment received! generating resume...';
-            showToast('✅ Payment successful! Generating...', 'success');
+            // Step 3: Confirm payment + generate resume on backend
+            genStatus.textContent = '⏳ payment verified! generating resume...';
+            genBtn.querySelector('.btn-text').textContent = 'generating...';
 
-            // Step 3: Verify payment (async, don't block generation)
-            fetch('http://localhost:7001/api/verify-payment', {
+            const confirmRes = await fetch('http://localhost:7001/api/confirm', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(paymentResult),
-            }).catch(() => {});
+                body: JSON.stringify({
+                    ...data,
+                    order_id: paymentResult.razorpay_order_id,
+                    payment_id: paymentResult.razorpay_payment_id,
+                    signature: paymentResult.razorpay_signature,
+                }),
+            });
 
-            // Step 4: Generate with AI
-            let aiContent = null;
-            try {
-                genStatus.textContent = '⏳ AI is writing your resume...';
-                genBtn.querySelector('.btn-text').textContent = 'generating...';
-                aiContent = await generateResumeContent(data);
-            } catch (aiErr) {
-                console.warn('AI generation failed, using raw data:', aiErr);
-                genStatus.textContent = '⚠️ AI enhancement failed, using your data';
-                showToast('⚠️ AI hit a snag, used raw data', 'warn');
+            if (!confirmRes.ok) {
+                const err = await confirmRes.json().catch(() => ({ message: 'Generation failed' }));
+                throw new Error(err.message || 'Generation failed');
             }
 
-            // Step 5: Render resume (always works)
-            renderResume(data, aiContent);
+            const result = await confirmRes.json();
+            if (!result.success) throw new Error(result.message || 'Generation failed');
 
-            // Step 6: Save to history
+            // Step 4: Display the rendered HTML from backend
+            state.lastHTML = result.html;
+            preview.innerHTML = result.html;
+
+            // Step 5: Save to history
             const historyEntry = {
                 id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
                 timestamp: Date.now(),
                 name: data.name,
                 role: data.role,
                 template: data.template,
-                html: state.lastHTML,
+                html: result.html,
                 formData: data,
-                aiContent: aiContent,
                 paymentId: paymentResult.razorpay_payment_id || '',
             };
             saveHistory(historyEntry);
@@ -535,33 +469,9 @@ For each experience entry, expand the description to include specific achievemen
             if (err.message === 'CANCELLED') {
                 genStatus.textContent = '[!] payment was cancelled';
                 showToast('Payment cancelled', 'warn');
-            } else if (!paymentReceived) {
+            } else {
                 genStatus.textContent = `❌ ${err.message || 'Something went wrong'}`;
                 showToast('❌ ' + (err.message || 'Error'), 'error');
-            } else {
-                // Payment was received but something failed after
-                // Render anyway — the user paid!
-                genStatus.textContent = '⚠️ Payment received but had issues. Rendering resume...';
-                showToast('⚠️ Payment processed! Rendering resume...', 'warn');
-                try {
-                    renderResume(data, null);
-                    const entry = {
-                        id: Date.now().toString(36),
-                        timestamp: Date.now(),
-                        name: data.name,
-                        role: data.role,
-                        template: data.template,
-                        html: state.lastHTML || '',
-                        formData: data,
-                        aiContent: null,
-                        paymentId: 'unknown',
-                    };
-                    saveHistory(entry);
-                    genStatus.textContent = '✅ Resume generated! Contact support for AI issues.';
-                } catch {
-                    genStatus.textContent = '❌ Fatal error. Your payment was received. Contact support.';
-                    showToast('❌ Critical error. Payment logged.', 'error');
-                }
             }
         }
 
