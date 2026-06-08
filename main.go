@@ -18,6 +18,7 @@ import (
 var razorpayKey = "rzp_test_ROWBYwf6K2oOey"
 var razorpaySecret = "XwvS8NHXAGY2bLbmhLQg1qYo"
 var geminiKey = "" // Set via env var GEMINI_API_KEY
+var corsOrigin = "" // Set via env var CORS_ORIGIN (defaults to *)
 
 var client = &http.Client{Timeout: 30 * time.Second}
 
@@ -79,11 +80,21 @@ type GenerateResponse struct {
 // ── CORS middleware ────────────────────────────────────────
 func cors(h http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		origin := r.Header.Get("Origin")
+		if corsOrigin != "" && origin == corsOrigin {
+			w.Header().Set("Access-Control-Allow-Origin", corsOrigin)
+			w.Header().Set("Vary", "Origin")
+		} else if corsOrigin != "" {
+			w.Header().Set("Access-Control-Allow-Origin", corsOrigin)
+			w.Header().Set("Vary", "Origin")
+		} else {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		}
+		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		w.Header().Set("Access-Control-Max-Age", "86400")
 		if r.Method == "OPTIONS" {
-			w.WriteHeader(200)
+			w.WriteHeader(204)
 			return
 		}
 		h(w, r)
@@ -694,6 +705,13 @@ func main() {
 		log.Println("⚠️  GEMINI_API_KEY not set — AI generation will be skipped, using raw form data")
 	}
 
+	if o := os.Getenv("CORS_ORIGIN"); o != "" {
+		corsOrigin = o
+		log.Printf("✦ CORS origin restricted to: %s", corsOrigin)
+	} else {
+		log.Println("✦ CORS wide open (*) — set CORS_ORIGIN env var for production")
+	}
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/health", cors(func(w http.ResponseWriter, r *http.Request) {
 		writeJSON(w, map[string]interface{}{
@@ -704,6 +722,10 @@ func main() {
 	}))
 	mux.HandleFunc("/api/generate", cors(handleGenerate))
 	mux.HandleFunc("/api/confirm", cors(handleConfirm))
+
+	// Serve static frontend files (index.html, app.js, style.css)
+	fs := http.FileServer(http.Dir("."))
+	mux.Handle("/", fs)
 
 	log.Printf("✦ Resume Forge backend on port %s", port)
 	log.Printf("✦ Gemini configured: %v", geminiKey != "")
