@@ -14,6 +14,7 @@
             <div class="nav-right">
                 <span class="nav-badge" id="nav-gen-count">0 generated</span>
                 <a href="#" class="nav-link" id="nav-templates-btn">templates</a>
+                <a href="#" class="nav-link" id="nav-history-btn">📋 my resumes</a>
                 <a href="#" class="nav-link" id="nav-about-btn">about</a>
             </div>
         </div>
@@ -290,6 +291,22 @@
     </div>
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+    <!-- HISTORY PANEL -->
+    <div id="history-panel">
+        <div class="history-header">
+            <h3><span class="cyan">#</span> my resumes</h3>
+            <button id="close-history" class="modal-close">✕</button>
+        </div>
+        <div class="history-body">
+            <div id="empty-history" class="history-empty">
+                <span style="font-size:2rem;display:block;margin-bottom:0.3rem;">📄</span>
+                <span>no resumes yet</span>
+                <span class="dim" style="font-size:0.7rem;">generate one to see it here</span>
+            </div>
+            <div id="history-list"></div>
+        </div>
+    </div>
     <script src="app.js"></script>
 </body>
 </html>
