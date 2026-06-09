@@ -43,9 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const navCount = document.getElementById("nav-gen-count");
   const expContainer = document.getElementById("exp-container");
   const eduContainer = document.getElementById("edu-container");
-  const projContainer = document.getElementById("proj-container");
-  const achievementContainer = document.getElementById("achievement-container");
-  const certContainer = document.getElementById("cert-container");
   const historyList = document.getElementById("history-list");
   const emptyHistory = document.getElementById("empty-history");
   const historyPanel = document.getElementById("history-panel");
@@ -223,145 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("add-edu").addEventListener("click", () => {
     eduContainer.appendChild(createEduEntry());
     updateEduCounters();
-  });
-
-  // ─── PROJECT ENTRIES ─────────────────────────────────────
-  function createProjEntry(data) {
-    const entryId = Math.random().toString(36).slice(2, 9);
-    const div = document.createElement("div");
-    div.className = "proj-entry";
-    div.innerHTML = `
-            <div class="exp-header">
-                <span class="proj-counter">#${projContainer.children.length + 1}</span>
-                <button type="button" class="remove-entry" title="remove" aria-label="Remove entry">✕</button>
-            </div>
-            <div class="form-row">
-                <div class="form-group flex-1">
-                    <label for="proj-title-${entryId}">project title</label>
-                    <input type="text" class="proj-title" id="proj-title-${entryId}" value="${data?.title || ""}" placeholder="Project Name">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group flex-1">
-                    <label for="proj-desc-${entryId}">project description (one liner)</label>
-                    <input type="text" class="proj-desc" id="proj-desc-${entryId}" value="${data?.desc || data?.description || ""}" placeholder="A brief one-sentence description of what the project does.">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group flex-1">
-                    <label for="proj-tech-${entryId}">tech stack</label>
-                    <input type="text" class="proj-tech" id="proj-tech-${entryId}" value="${data?.tech || data?.tech_stack || ""}" placeholder="Go, React, Tailwind CSS">
-                </div>
-            </div>
-        `;
-    div.querySelector(".remove-entry").addEventListener("click", () => {
-      div.remove();
-      updateProjCounters();
-    });
-    return div;
-  }
-
-  function updateProjCounters() {
-    document
-      .querySelectorAll(".proj-counter")
-      .forEach((c, i) => (c.textContent = `#${i + 1}`));
-  }
-
-  document.getElementById("add-proj").addEventListener("click", () => {
-    projContainer.appendChild(createProjEntry());
-    updateProjCounters();
-  });
-
-  // ─── ACHIEVEMENT ENTRIES ──────────────────────────────
-  function createAchievementEntry(data) {
-    const entryId = Math.random().toString(36).slice(2, 9);
-    const div = document.createElement("div");
-    div.className = "achievement-entry";
-    div.innerHTML = `
-            <div class="exp-header">
-                <span class="ach-counter">#${achievementContainer.children.length + 1}</span>
-                <button type="button" class="remove-entry" title="remove" aria-label="Remove entry">✕</button>
-            </div>
-            <div class="form-group">
-                <label for="ach-title-${entryId}">title</label>
-                <input type="text" class="ach-title" id="ach-title-${entryId}" value="${data?.title || ""}" placeholder="Dean's List / Top Performer Award">
-            </div>
-            <div class="form-row">
-                <div class="form-group flex-1">
-                    <label for="ach-date-${entryId}">date</label>
-                    <input type="text" class="ach-date" id="ach-date-${entryId}" value="${data?.date || ""}" placeholder="2024">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="ach-desc-${entryId}">description</label>
-                <textarea class="ach-desc" id="ach-desc-${entryId}" rows="2" placeholder="Brief description of the achievement...">${data?.desc || data?.description || ""}</textarea>
-            </div>
-        `;
-    div.querySelector(".remove-entry").addEventListener("click", () => {
-      div.remove();
-      updateAchCounters();
-    });
-    return div;
-  }
-
-  function updateAchCounters() {
-    document
-      .querySelectorAll(".ach-counter")
-      .forEach((c, i) => (c.textContent = `#${i + 1}`));
-  }
-
-  document.getElementById("add-ach").addEventListener("click", () => {
-    achievementContainer.appendChild(createAchievementEntry());
-    updateAchCounters();
-  });
-
-  // ─── CERTIFICATION ENTRIES ────────────────────────────
-  function createCertificationEntry(data) {
-    const entryId = Math.random().toString(36).slice(2, 9);
-    const div = document.createElement("div");
-    div.className = "cert-entry";
-    div.innerHTML = `
-            <div class="exp-header">
-                <span class="cert-counter">#${certContainer.children.length + 1}</span>
-                <button type="button" class="remove-entry" title="remove" aria-label="Remove entry">✕</button>
-            </div>
-            <div class="form-row">
-                <div class="form-group flex-1">
-                    <label for="cert-title-${entryId}">title</label>
-                    <input type="text" class="cert-title" id="cert-title-${entryId}" value="${data?.title || ""}" placeholder="AWS Certified Solutions Architect">
-                </div>
-                <div class="form-group flex-1">
-                    <label for="cert-issuer-${entryId}">issuer</label>
-                    <input type="text" class="cert-issuer" id="cert-issuer-${entryId}" value="${data?.issuer || ""}" placeholder="Amazon Web Services">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group flex-1">
-                    <label for="cert-date-${entryId}">date</label>
-                    <input type="text" class="cert-date" id="cert-date-${entryId}" value="${data?.date || ""}" placeholder="2024">
-                </div>
-                <div class="form-group flex-1">
-                    <label for="cert-link-${entryId}">link (optional)</label>
-                    <input type="text" class="cert-link" id="cert-link-${entryId}" value="${data?.link || ""}" placeholder="https://credential.example.com">
-                </div>
-            </div>
-        `;
-    div.querySelector(".remove-entry").addEventListener("click", () => {
-      div.remove();
-      updateCertCounters();
-    });
-    return div;
-  }
-
-  function updateCertCounters() {
-    document
-      .querySelectorAll(".cert-counter")
-      .forEach((c, i) => (c.textContent = `#${i + 1}`));
-  }
-
-  document.getElementById("add-cert").addEventListener("click", () => {
-    certContainer.appendChild(createCertificationEntry());
-    updateCertCounters();
   });
 
   // ─── HISTORY ────────────────────────────────────────────
@@ -666,56 +524,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.62rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #2c3e50;padding-bottom:0.15rem;margin-bottom:0.2rem;">Skills</div><div style="display:flex;flex-wrap:wrap;gap:0.2rem;">${skills.map((s) => `<span style="font-size:0.58rem;padding:0.05rem 0.3rem;background:#f0f0f0;border-radius:2px;color:#333;">${s}</span>`).join("")}</div></div>`;
       }
     }
-        return "";
-  }
-
-  // ─── ACHIEVEMENTS RENDER HELPER ───────────────────────
-  function renderAchievementsBlock(data, mode) {
-    const achievements = data.achievements || [];
-    if (!achievements.length) return "";
-
-    if (mode === "compact") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Achievements</div>${achievements.map((a) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;">${a.title}</div>${a.date ? `<div style="font-size:0.6rem;color:#777;">${a.date}</div>` : ""}${a.desc ? `<div style="font-size:0.65rem;color:#444;margin-top:0.05rem;">${a.desc}</div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "terminal") {
-      return `<div class="rt-section"><div class="rt-section-title">// achievements</div>${achievements.map((a) => `<div class="rt-item"><div class="rt-item-title">${a.title}</div>${a.date ? `<div class="rt-item-sub">${a.date}</div>` : ""}${a.desc ? `<div class="rt-item-desc">${a.desc}</div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "minimal") {
-      return `<div style="margin-top:0.8rem;"><div class="rm-section-title">Achievements</div>${achievements.map((a) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;">${a.title}</div>${a.date ? `<div style="font-size:0.65rem;color:#555;">${a.date}</div>` : ""}${a.desc ? `<div style="font-size:0.68rem;color:#333;margin-top:0.05rem;">${a.desc}</div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "modern") {
-      return `<div><div class="mod-section-title">Achievements</div>${achievements.map((a) => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.7rem;font-weight:600;color:#fff;">${a.title}</div>${a.date ? `<div style="font-size:0.6rem;color:#aaa;">${a.date}</div>` : ""}${a.desc ? `<div style="font-size:0.62rem;color:#ccc;margin-top:0.05rem;">${a.desc}</div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "executive") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e8e0d0;padding-bottom:0.2rem;margin-bottom:0.3rem;">Achievements</div>${achievements.map((a) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;color:#0a1628;">${a.title}</div>${a.date ? `<div style="font-size:0.65rem;color:#c8a951;font-style:italic;">${a.date}</div>` : ""}${a.desc ? `<div style="font-size:0.68rem;color:#555;margin-top:0.05rem;">${a.desc}</div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "creative") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✦ Achievements</div>${achievements.map((a) => `<div style="margin-bottom:0.3rem;background:#fafafa;border-radius:10px;padding:0.4rem 0.7rem;border-left:3px solid #ff6b9d;"><div style="font-size:0.72rem;font-weight:600;color:#330066;">${a.title}</div>${a.date ? `<div style="font-size:0.65rem;color:#ff6b9d;">${a.date}</div>` : ""}${a.desc ? `<div style="font-size:0.68rem;color:#555;margin-top:0.05rem;">${a.desc}</div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "timeline") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.3rem;">Achievements</div>${achievements.map((a) => `<div style="display:flex;gap:0.8rem;margin-bottom:0.3rem;"><div style="width:80px;flex-shrink:0;text-align:right;font-size:0.65rem;color:#3498db;font-weight:600;">${a.date || ""}</div><div style="flex:1;padding-left:0.8rem;border-left:2px solid #e0e0e0;"><div style="font-size:0.72rem;font-weight:600;">${a.title}</div>${a.desc ? `<div style="font-size:0.65rem;color:#666;">${a.desc}</div>` : ""}</div></div>`).join("")}</div>`;
-    } else if (mode === "columns") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.15rem;margin-bottom:0.3rem;">Achievements</div>${achievements.map((a) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;">${a.title}</div>${a.date ? `<div style="font-size:0.65rem;color:#555;">${a.date}</div>` : ""}${a.desc ? `<div style="font-size:0.65rem;color:#555;margin-top:0.05rem;">${a.desc}</div>` : ""}</div>`).join("")}</div>`;
-    }
-    return "";
-  }
-
-  // ─── CERTIFICATIONS RENDER HELPER ──────────────────────
-  function renderCertificationsBlock(data, mode) {
-    const certifications = data.certifications || [];
-    if (!certifications.length) return "";
-
-    if (mode === "compact") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Certifications</div>${certifications.map((c) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;">${c.title}</div><div style="font-size:0.65rem;color:#555;">${c.issuer}${c.date ? ` · ${c.date}` : ""}</div>${c.link ? `<div style="font-size:0.6rem;"><a href="${c.link}" target="_blank" style="color:#00cc9e;">${c.link}</a></div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "terminal") {
-      return `<div class="rt-section"><div class="rt-section-title">// certifications</div>${certifications.map((c) => `<div class="rt-item"><div class="rt-item-title">${c.title}</div><div class="rt-item-sub">${c.issuer}${c.date ? ` · ${c.date}` : ""}</div>${c.link ? `<div class="rt-item-desc"><a href="${c.link}" target="_blank" style="color:#00ffc8;">${c.link}</a></div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "minimal") {
-      return `<div style="margin-top:0.8rem;"><div class="rm-section-title">Certifications</div>${certifications.map((c) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;">${c.title}</div><div style="font-size:0.65rem;color:#555;">${c.issuer}${c.date ? ` · ${c.date}` : ""}</div>${c.link ? `<div style="font-size:0.6rem;"><a href="${c.link}" target="_blank" style="color:#333;">${c.link}</a></div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "modern") {
-      return `<div><div class="mod-section-title">Certifications</div>${certifications.map((c) => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.7rem;font-weight:600;color:#fff;">${c.title}</div><div style="font-size:0.62rem;color:#aaa;">${c.issuer}${c.date ? ` · ${c.date}` : ""}</div>${c.link ? `<div style="font-size:0.6rem;"><a href="${c.link}" target="_blank" style="color:#00ffc8;">${c.link}</a></div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "executive") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e8e0d0;padding-bottom:0.2rem;margin-bottom:0.3rem;">Certifications</div>${certifications.map((c) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;color:#0a1628;">${c.title}</div><div style="font-size:0.65rem;color:#666;">${c.issuer}${c.date ? ` · ${c.date}` : ""}</div>${c.link ? `<div style="font-size:0.6rem;"><a href="${c.link}" target="_blank" style="color:#c8a951;">${c.link}</a></div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "creative") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✦ Certifications</div>${certifications.map((c) => `<div style="margin-bottom:0.3rem;background:#fafafa;border-radius:10px;padding:0.4rem 0.7rem;border-left:3px solid #00d4aa;"><div style="font-size:0.72rem;font-weight:600;color:#330066;">${c.title}</div><div style="font-size:0.65rem;color:#666;">${c.issuer}${c.date ? ` · ${c.date}` : ""}</div>${c.link ? `<div style="font-size:0.6rem;"><a href="${c.link}" target="_blank" style="color:#00d4aa;">${c.link}</a></div>` : ""}</div>`).join("")}</div>`;
-    } else if (mode === "timeline") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.3rem;">Certifications</div>${certifications.map((c) => `<div style="display:flex;gap:0.8rem;margin-bottom:0.3rem;"><div style="width:80px;flex-shrink:0;text-align:right;font-size:0.65rem;color:#3498db;font-weight:600;">${c.date || ""}</div><div style="flex:1;padding-left:0.8rem;border-left:2px solid #e0e0e0;"><div style="font-size:0.72rem;font-weight:600;">${c.title}</div><div style="font-size:0.65rem;color:#666;">${c.issuer}</div></div></div>`).join("")}</div>`;
-    } else if (mode === "columns") {
-      return `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.15rem;margin-bottom:0.3rem;">Certifications</div>${certifications.map((c) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;">${c.title}</div><div style="font-size:0.65rem;color:#555;">${c.issuer}${c.date ? ` · ${c.date}` : ""}</div>${c.link ? `<div style="font-size:0.6rem;"><a href="${c.link}" target="_blank" style="color:#2c3e50;">${c.link}</a></div>` : ""}</div>`).join("")}</div>`;
-    }
     return "";
   }
 
@@ -740,14 +548,6 @@ document.addEventListener("DOMContentLoaded", () => {
         to: el.querySelector(".edu-to")?.value || "",
       });
     });
-    const projs = [];
-    document.querySelectorAll(".proj-entry").forEach((el) => {
-      projs.push({
-        title: el.querySelector(".proj-title")?.value || "",
-        desc: el.querySelector(".proj-desc")?.value || "",
-        tech: el.querySelector(".proj-tech")?.value || "",
-      });
-    });
     return {
       name: document.getElementById("name").value.trim() || "Your Name",
       role: document.getElementById("role").value.trim() || "Developer",
@@ -767,18 +567,6 @@ document.addEventListener("DOMContentLoaded", () => {
       skills_cloud: document.getElementById("skills-cloud").value.trim() || "",
       experience: exps.filter((e) => e.company && e.role),
       education: edus.filter((e) => e.school && e.degree),
-      projects: projs.filter((p) => p.title),
-      achievements: [...document.querySelectorAll('.achievement-entry')].map(el => ({
-        title: el.querySelector('.ach-title')?.value || '',
-        date: el.querySelector('.ach-date')?.value || '',
-        desc: el.querySelector('.ach-desc')?.value || '',
-      })).filter(a => a.title),
-      certifications: [...document.querySelectorAll('.cert-entry')].map(el => ({
-        title: el.querySelector('.cert-title')?.value || '',
-        issuer: el.querySelector('.cert-issuer')?.value || '',
-        date: el.querySelector('.cert-date')?.value || '',
-        link: el.querySelector('.cert-link')?.value || '',
-      })).filter(c => c.title),
       template: state.template,
     };
   }
@@ -845,31 +633,6 @@ document.addEventListener("DOMContentLoaded", () => {
       eduContainer.appendChild(createEduEntry(e)),
     );
     if (!data.education?.length) eduContainer.appendChild(createEduEntry());
-    updateEduCounters();
-
-    // Projects
-    projContainer.innerHTML = "";
-    (data.projects || []).forEach((p) =>
-      projContainer.appendChild(createProjEntry(p)),
-    );
-    if (!data.projects?.length) projContainer.appendChild(createProjEntry());
-    updateProjCounters();
-
-    // Achievements
-    achievementContainer.innerHTML = "";
-    (data.achievements || []).forEach((a) =>
-      achievementContainer.appendChild(createAchievementEntry(a)),
-    );
-    if (!data.achievements?.length) achievementContainer.appendChild(createAchievementEntry());
-    updateAchCounters();
-
-    // Certifications
-    certContainer.innerHTML = "";
-    (data.certifications || []).forEach((c) =>
-      certContainer.appendChild(createCertificationEntry(c)),
-    );
-    if (!data.certifications?.length) certContainer.appendChild(createCertificationEntry());
-    updateCertCounters();
   }
 
   // ─── RENDER RESUME ─────────────────────────────────────
@@ -897,9 +660,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 ${summary ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Summary</div><p style="font-size:0.65rem;line-height:1.35;color:#333;margin:0;">${summary}</p></div>` : ""}
                 ${experiences.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Experience</div>${experiences.map((e) => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.78rem;font-weight:600;">${e.role} — <span style="font-weight:400;color:#555;">${e.company}</span></div><div style="font-size:0.65rem;color:#777;">${e.from || ""} — ${e.to || ""}</div><div style="font-size:0.7rem;color:#444;margin-top:0.1rem;line-height:1.4;">${e.description || e.desc || ""}</div></div>`).join("")}</div>` : ""}
-                ${renderAchievementsBlock(data, "compact")}
                 ${educations.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#00cc9e;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Education</div>${educations.map((e) => `<div style="font-size:0.75rem;margin-bottom:0.15rem;"><span style="font-weight:600;">${e.degree}</span> — ${e.school} <span style="color:#777;">(${e.from || ""} — ${e.to || ""})</span></div>`).join("")}</div>` : ""}
-                ${renderCertificationsBlock(data, "compact")}
                 ${renderSkillsBlock(data, "compact")}
             </div>`;
     } else if (data.template === "terminal") {
@@ -908,9 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="rt-body">
                     ${summary ? `<div class="rt-section"><div class="rt-section-title">// summary</div><div class="rt-item-desc">${summary}</div></div>` : ""}
                     ${experiences.length ? `<div class="rt-section"><div class="rt-section-title">// experience</div>${experiences.map((e) => `<div class="rt-item"><div class="rt-item-title">${e.role} @ ${e.company}</div><div class="rt-item-sub">${e.from || ""} — ${e.to || ""}</div><div class="rt-item-desc">${e.description || e.desc || ""}</div></div>`).join("")}</div>` : ""}
-                    ${renderAchievementsBlock(data, "terminal")}
                     ${educations.length ? `<div class="rt-section"><div class="rt-section-title">// education</div>${educations.map((e) => `<div class="rt-item"><div class="rt-item-title">${e.degree} @ ${e.school}</div><div class="rt-item-sub">${e.from || ""} — ${e.to || ""}</div></div>`).join("")}</div>` : ""}
-                    ${renderCertificationsBlock(data, "terminal")}
                     ${renderSkillsBlock(data, "terminal")}
                 </div>
             </div>`;
@@ -921,19 +680,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="rt-section-title">${"\u2500".repeat(30)}</div>
                     <p style="font-size:0.65rem;margin:0.3rem 0;line-height:1.35;color:#333;">${summary}</p>
                     ${experiences.length ? `<div style="margin-top:0.8rem;"><div class="rm-section-title">Experience</div>${experiences.map((e) => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.78rem;font-weight:600;">${e.role} — ${e.company}</div><div style="font-size:0.68rem;color:#555;">${e.from || ""} — ${e.to || ""}</div><div style="font-size:0.7rem;color:#333;margin-top:0.1rem;">${e.description || e.desc || ""}</div></div>`).join("")}</div>` : ""}
-                    ${renderAchievementsBlock(data, "minimal")}
                     ${renderSkillsBlock(data, "minimal")}
                     ${educations.length ? `<div style="margin-top:0.8rem;"><div class="rm-section-title">Education</div>${educations.map((e) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.78rem;font-weight:600;">${e.degree} — ${e.school}</div><div style="font-size:0.68rem;color:#555;">${e.from || ""} — ${e.to || ""}</div></div>`).join("")}</div>` : ""}
-                    ${renderCertificationsBlock(data, "minimal")}
                 </div>
             </div>`;
     } else if (data.template === "modern") {
       html = `<div class="resume-output resume-modern">
                 <div class="mod-sidebar"><h1>${data.name}</h1><div class="mod-role">${data.role}</div><div class="mod-contact">${data.email ? `<div>✉ ${data.email}</div>` : ""}${data.phone ? `<div>📞 ${data.phone}</div>` : ""}${data.location ? `<div>📍 ${data.location}</div>` : ""}${data.portfolio ? `<div>🔗 ${data.portfolio}</div>` : ""}</div>
-                    ${renderAchievementsBlock(data, "modern")}
                     ${renderSkillsBlock(data, "modern")}
                     ${educations.length ? `<div><div class="mod-section-title">Education</div>${educations.map((e) => `<div style="margin-bottom:0.4rem;"><div style="font-size:0.7rem;font-weight:600;color:#fff;">${e.degree}</div><div style="font-size:0.62rem;color:#aaa;">${e.school}</div><div style="font-size:0.6rem;color:#777;">${e.from || ""} — ${e.to || ""}</div></div>`).join("")}</div>` : ""}
-                    ${renderCertificationsBlock(data, "modern")}
                 </div>
                 <div class="mod-main">
                     <div style="margin-bottom:1rem;"><div class="mod-section-title">About</div><p style="font-size:0.72rem;color:#333;line-height:1.5;">${summary}</p></div>
@@ -957,10 +712,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div style="padding:1rem 2rem 1.5rem;">
                     ${summary ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Professional Summary</div><p style="font-size:0.72rem;line-height:1.6;color:#444;margin:0;">${summary}</p></div>` : ""}
                     ${experiences.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e8e0d0;padding-bottom:0.2rem;margin-bottom:0.4rem;">Experience</div>${experiences.map((e) => `<div style="margin-bottom:0.5rem;"><div style="font-size:0.8rem;font-weight:700;color:#0a1628;">${e.role}</div><div style="font-size:0.7rem;color:#c8a951;font-style:italic;">${e.company} · ${e.from || ""} — ${e.to || ""}</div><div style="font-size:0.7rem;color:#555;margin-top:0.1rem;line-height:1.5;">${e.description || e.desc || ""}</div></div>`).join("")}</div>` : ""}
-                    ${renderAchievementsBlock(data, "executive")}
                     ${renderSkillsBlock(data, "executive")}
                     ${educations.length ? `<div><div style="font-size:0.7rem;font-weight:600;color:#c8a951;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e8e0d0;padding-bottom:0.2rem;margin-bottom:0.3rem;">Education</div>${educations.map((e) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.75rem;font-weight:600;">${e.degree}</div><div style="font-size:0.68rem;color:#666;">${e.school} <span style="color:#999;">(${e.from || ""} — ${e.to || ""})</span></div></div>`).join("")}</div>` : ""}
-                    ${renderCertificationsBlock(data, "executive")}
                 </div>
             </div>`;
     } else if (data.template === "creative") {
@@ -980,10 +733,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div style="padding:1rem 2rem 1.5rem;">
                     ${summary ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">✦ About</div><p style="font-size:0.72rem;line-height:1.6;color:#444;margin:0;">${summary}</p></div>` : ""}
                     ${experiences.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✦ Experience</div>${experiences.map((e) => `<div style="margin-bottom:0.5rem;background:#fafafa;border-radius:12px;padding:0.5rem 0.7rem;border-left:3px solid #00d4aa;"><div style="font-size:0.8rem;font-weight:700;color:#330066;">${e.role}</div><div style="font-size:0.7rem;color:#ff6b9d;font-weight:500;">${e.company} · ${e.from || ""} — ${e.to || ""}</div><div style="font-size:0.7rem;color:#555;margin-top:0.1rem;line-height:1.5;">${e.description || e.desc || ""}</div></div>`).join("")}</div>` : ""}
-                    ${renderAchievementsBlock(data, "creative")}
                     ${renderSkillsBlock(data, "creative")}
                     ${educations.length ? `<div><div style="font-size:0.7rem;font-weight:700;color:#ff6b9d;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">✦ Education</div>${educations.map((e) => `<div style="margin-bottom:0.3rem;background:#fafafa;border-radius:10px;padding:0.4rem 0.7rem;"><div style="font-size:0.75rem;font-weight:600;color:#330066;">${e.degree}</div><div style="font-size:0.68rem;color:#666;">${e.school} <span style="color:#999;">(${e.from || ""} — ${e.to || ""})</span></div></div>`).join("")}</div>` : ""}
-                    ${renderCertificationsBlock(data, "creative")}
                 </div>
             </div>`;
     } else if (data.template === "timeline") {
@@ -1003,10 +754,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div style="padding:1rem 2rem 1.5rem;">
                     ${summary ? `<div style="margin-bottom:0.8rem;padding-left:1rem;border-left:3px solid #3498db;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.2rem;">Summary</div><p style="font-size:0.72rem;line-height:1.5;color:#555;margin:0;">${summary}</p></div>` : ""}
                     ${experiences.length ? `<div style="margin-bottom:0.8rem;"><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.4rem;">Experience</div>${experiences.map((e) => `<div style="display:flex;gap:0.8rem;margin-bottom:0.6rem;position:relative;"><div style="width:80px;flex-shrink:0;text-align:right;font-size:0.65rem;color:#3498db;font-weight:600;padding-top:0.1rem;">${e.from || ""} — ${e.to || ""}</div><div style="flex:1;padding-left:0.8rem;border-left:2px solid #e0e0e0;position:relative;"><div style="position:absolute;left:-5px;top:4px;width:8px;height:8px;background:#3498db;border-radius:50%;"></div><div style="font-size:0.78rem;font-weight:600;">${e.role} — <span style="font-weight:400;color:#555;">${e.company}</span></div><div style="font-size:0.68rem;color:#666;margin-top:0.05rem;line-height:1.4;">${e.description || e.desc || ""}</div></div></div>`).join("")}</div>` : ""}
-                    ${renderAchievementsBlock(data, "timeline")}
                     ${renderSkillsBlock(data, "timeline")}
                     ${educations.length ? `<div><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e0e0e0;padding-bottom:0.2rem;margin-bottom:0.3rem;">Education</div>${educations.map((e) => `<div style="display:flex;gap:0.8rem;margin-bottom:0.3rem;"><div style="width:80px;flex-shrink:0;text-align:right;font-size:0.65rem;color:#3498db;font-weight:600;">${e.from || ""} — ${e.to || ""}</div><div style="flex:1;padding-left:0.8rem;border-left:2px solid #e0e0e0;"><div style="font-size:0.75rem;font-weight:600;">${e.degree}</div><div style="font-size:0.68rem;color:#666;">${e.school}</div></div></div>`).join("")}</div>` : ""}
-                    ${renderCertificationsBlock(data, "timeline")}
                 </div>
             </div>`;
     } else if (data.template === "columns") {
@@ -1029,10 +778,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         ${experiences.length ? `<div><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.15rem;margin-bottom:0.3rem;">Experience</div>${experiences.map((e) => `<div style="margin-bottom:0.5rem;"><div style="font-size:0.75rem;font-weight:600;">${e.role}</div><div style="font-size:0.65rem;color:#555;">${e.company} · ${e.from || ""} — ${e.to || ""}</div><div style="font-size:0.65rem;color:#555;margin-top:0.05rem;line-height:1.4;">${e.description || e.desc || ""}</div></div>`).join("")}</div>` : ""}
                     </div>
                     <div style="flex:1;">
-                        ${renderAchievementsBlock(data, "columns")}
                         ${renderSkillsBlock(data, "columns")}
                         ${educations.length ? `<div><div style="font-size:0.7rem;font-weight:700;color:#2c3e50;text-transform:uppercase;letter-spacing:1px;border-bottom:1px solid #e0e0e0;padding-bottom:0.15rem;margin-bottom:0.3rem;">Education</div>${educations.map((e) => `<div style="margin-bottom:0.3rem;"><div style="font-size:0.72rem;font-weight:600;">${e.degree}</div><div style="font-size:0.65rem;color:#555;">${e.school} <span style="color:#999;">(${e.from || ""} — ${e.to || ""})</span></div></div>`).join("")}</div>` : ""}
-                        ${renderCertificationsBlock(data, "columns")}
                     </div>
                 </div>
             </div>`;
@@ -1228,22 +975,5 @@ document.addEventListener("DOMContentLoaded", () => {
     eduContainer.innerHTML = "";
     eduContainer.appendChild(createEduEntry());
     updateEduCounters();
-  }
-  if (projContainer && projContainer.querySelector(".proj-entry")) {
-    projContainer.innerHTML = "";
-    projContainer.appendChild(createProjEntry());
-    updateProjCounters();
-  }
-
-  // Achievement and certification entries
-  if (achievementContainer && achievementContainer.querySelector(".achievement-entry")) {
-    achievementContainer.innerHTML = "";
-    achievementContainer.appendChild(createAchievementEntry());
-    updateAchCounters();
-  }
-  if (certContainer && certContainer.querySelector(".cert-entry")) {
-    certContainer.innerHTML = "";
-    certContainer.appendChild(createCertificationEntry());
-    updateCertCounters();
   }
 });

@@ -44,16 +44,16 @@ type proj struct {
 }
 
 type achievement struct {
-	Title       string
-	Date        string
-	Description string
+	Title       string `json:"title"`
+	Date        string `json:"date"`
+	Description string `json:"desc"`
 }
 
 type certification struct {
-	Title  string
-	Issuer string
-	Date   string
-	Link   string
+	Title  string `json:"title"`
+	Issuer string `json:"issuer"`
+	Date   string `json:"date"`
+	Link   string `json:"link"`
 }
 
 // ── Request types ──────────────────────────────────────────
