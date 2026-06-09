@@ -3,6 +3,11 @@
    ═══════════════════════════════════════════════════════════════ */
 
 document.addEventListener("DOMContentLoaded", () => {
+  const apiBase =
+    window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+      ? "http://localhost:3000"
+      : "https://backend.resumeforge.zephex.in";
+
   // ─── STATE ──────────────────────────────────────────────
   const state = {
     template: "terminal",
@@ -43,6 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const navCount = document.getElementById("nav-gen-count");
   const expContainer = document.getElementById("exp-container");
   const eduContainer = document.getElementById("edu-container");
+  const projContainer = document.getElementById("proj-container");
+  const achievementContainer = document.getElementById("achievement-container");
+  const certContainer = document.getElementById("cert-container");
   const historyList = document.getElementById("history-list");
   const emptyHistory = document.getElementById("empty-history");
   const historyPanel = document.getElementById("history-panel");
@@ -72,6 +80,23 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", () => aboutModal.classList.add("hidden"));
 
   // ─── TEMPLATE SELECTION ─────────────────────────────────
+  async function loadTemplatePreview(tmpl) {
+    if (state.lastHTML) {
+      // If a resume has already been generated in this session, don't overwrite it with mock data
+      return;
+    }
+    try {
+      const res = await fetch(`${apiBase}/api/preview?template=${tmpl}`);
+      if (res.ok) {
+        const html = await res.text();
+        preview.innerHTML = html;
+        fitResumeToPage();
+      }
+    } catch (err) {
+      console.error("Failed to load mock template preview:", err);
+    }
+  }
+
   document.querySelectorAll(".tmpl-option").forEach((opt) => {
     opt.addEventListener("click", () => {
       document
@@ -83,6 +108,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document
         .querySelectorAll('input[name="template"]')
         .forEach((r) => (r.checked = r.value === tmpl));
+      loadTemplatePreview(tmpl);
     });
   });
 
@@ -100,6 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         .querySelectorAll('input[name="template"]')
         .forEach((r) => (r.checked = r.value === tmpl));
       templatesModal.classList.add("hidden");
+      loadTemplatePreview(tmpl);
     });
   });
 
@@ -222,6 +249,145 @@ document.addEventListener("DOMContentLoaded", () => {
     updateEduCounters();
   });
 
+  // ─── PROJECTS ENTRIES ───────────────────────────────────
+  function createProjEntry(data) {
+    const entryId = Math.random().toString(36).slice(2, 9);
+    const div = document.createElement("div");
+    div.className = "proj-entry";
+    div.innerHTML = `
+            <div class="exp-header">
+                <span class="proj-counter">#${projContainer.children.length + 1}</span>
+                <button type="button" class="remove-entry" title="remove" aria-label="Remove entry">✕</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="proj-title-${entryId}">project title</label>
+                    <input type="text" class="proj-title" id="proj-title-${entryId}" value="${data?.title || ""}" placeholder="Project Name">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="proj-desc-${entryId}">project description (one liner)</label>
+                    <input type="text" class="proj-desc" id="proj-desc-${entryId}" value="${data?.desc || ""}" placeholder="A brief one-sentence description of what the project does.">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="proj-tech-${entryId}">tech stack</label>
+                    <input type="text" class="proj-tech" id="proj-tech-${entryId}" value="${data?.tech || ""}" placeholder="Go, React, Tailwind CSS">
+                </div>
+            </div>
+        `;
+    div.querySelector(".remove-entry").addEventListener("click", () => {
+      div.remove();
+      updateProjCounters();
+    });
+    return div;
+  }
+
+  function updateProjCounters() {
+    document
+      .querySelectorAll(".proj-counter")
+      .forEach((c, i) => (c.textContent = `#${i + 1}`));
+  }
+
+  document.getElementById("add-proj").addEventListener("click", () => {
+    projContainer.appendChild(createProjEntry());
+    updateProjCounters();
+  });
+
+  // ─── ACHIEVEMENTS ENTRIES ────────────────────────────────
+  function createAchEntry(data) {
+    const entryId = Math.random().toString(36).slice(2, 9);
+    const div = document.createElement("div");
+    div.className = "achievement-entry";
+    div.innerHTML = `
+            <div class="exp-header">
+                <span class="ach-counter">#${achievementContainer.children.length + 1}</span>
+                <button type="button" class="remove-entry" title="remove" aria-label="Remove entry">✕</button>
+            </div>
+            <div class="form-group">
+                <label for="ach-title-${entryId}">title</label>
+                <input type="text" class="ach-title" id="ach-title-${entryId}" value="${data?.title || ""}" placeholder="Dean's List / Top Performer Award">
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="ach-date-${entryId}">date</label>
+                    <input type="text" class="ach-date" id="ach-date-${entryId}" value="${data?.date || ""}" placeholder="2024">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="ach-desc-${entryId}">description</label>
+                <textarea class="ach-desc" id="ach-desc-${entryId}" rows="2" placeholder="Brief description of the achievement...">${data?.desc || data?.description || ""}</textarea>
+            </div>
+        `;
+    div.querySelector(".remove-entry").addEventListener("click", () => {
+      div.remove();
+      updateAchCounters();
+    });
+    return div;
+  }
+
+  function updateAchCounters() {
+    document
+      .querySelectorAll(".ach-counter")
+      .forEach((c, i) => (c.textContent = `#${i + 1}`));
+  }
+
+  document.getElementById("add-ach").addEventListener("click", () => {
+    achievementContainer.appendChild(createAchEntry());
+    updateAchCounters();
+  });
+
+  // ─── CERTIFICATIONS ENTRIES ──────────────────────────────
+  function createCertEntry(data) {
+    const entryId = Math.random().toString(36).slice(2, 9);
+    const div = document.createElement("div");
+    div.className = "cert-entry";
+    div.innerHTML = `
+            <div class="exp-header">
+                <span class="cert-counter">#${certContainer.children.length + 1}</span>
+                <button type="button" class="remove-entry" title="remove" aria-label="Remove entry">✕</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="cert-title-${entryId}">title</label>
+                    <input type="text" class="cert-title" id="cert-title-${entryId}" value="${data?.title || ""}" placeholder="AWS Certified Solutions Architect">
+                </div>
+                <div class="form-group flex-1">
+                    <label for="cert-issuer-${entryId}">issuer</label>
+                    <input type="text" class="cert-issuer" id="cert-issuer-${entryId}" value="${data?.issuer || ""}" placeholder="Amazon Web Services">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="cert-date-${entryId}">date</label>
+                    <input type="text" class="cert-date" id="cert-date-${entryId}" value="${data?.date || ""}" placeholder="2024">
+                </div>
+                <div class="form-group flex-1">
+                    <label for="cert-link-${entryId}">link (optional)</label>
+                    <input type="text" class="cert-link" id="cert-link-${entryId}" value="${data?.link || ""}" placeholder="https://credential.example.com">
+                </div>
+            </div>
+        `;
+    div.querySelector(".remove-entry").addEventListener("click", () => {
+      div.remove();
+      updateCertCounters();
+    });
+    return div;
+  }
+
+  function updateCertCounters() {
+    document
+      .querySelectorAll(".cert-counter")
+      .forEach((c, i) => (c.textContent = `#${i + 1}`));
+  }
+
+  document.getElementById("add-cert").addEventListener("click", () => {
+    certContainer.appendChild(createCertEntry());
+    updateCertCounters();
+  });
+
   // ─── HISTORY ────────────────────────────────────────────
   document.getElementById("nav-history-btn").addEventListener("click", () => {
     historyPanel.classList.toggle("open");
@@ -269,6 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
           state.lastData = item.formData;
           state.lastAIContent = item.aiContent;
           preview.innerHTML = item.html;
+          fitResumeToPage();
           if (item.formData) {
             fillFormFromData(item.formData);
           }
@@ -548,6 +715,31 @@ document.addEventListener("DOMContentLoaded", () => {
         to: el.querySelector(".edu-to")?.value || "",
       });
     });
+    const projs = [];
+    document.querySelectorAll(".proj-entry").forEach((el) => {
+      projs.push({
+        title: el.querySelector(".proj-title")?.value || "",
+        desc: el.querySelector(".proj-desc")?.value || "",
+        tech: el.querySelector(".proj-tech")?.value || "",
+      });
+    });
+    const achs = [];
+    document.querySelectorAll(".achievement-entry").forEach((el) => {
+      achs.push({
+        title: el.querySelector(".ach-title")?.value || "",
+        date: el.querySelector(".ach-date")?.value || "",
+        desc: el.querySelector(".ach-desc")?.value || "",
+      });
+    });
+    const certs = [];
+    document.querySelectorAll(".cert-entry").forEach((el) => {
+      certs.push({
+        title: el.querySelector(".cert-title")?.value || "",
+        issuer: el.querySelector(".cert-issuer")?.value || "",
+        date: el.querySelector(".cert-date")?.value || "",
+        link: el.querySelector(".cert-link")?.value || "",
+      });
+    });
     return {
       name: document.getElementById("name").value.trim() || "Your Name",
       role: document.getElementById("role").value.trim() || "Developer",
@@ -567,6 +759,9 @@ document.addEventListener("DOMContentLoaded", () => {
       skills_cloud: document.getElementById("skills-cloud").value.trim() || "",
       experience: exps.filter((e) => e.company && e.role),
       education: edus.filter((e) => e.school && e.degree),
+      projects: projs.filter((p) => p.title),
+      achievements: achs.filter((a) => a.title),
+      certifications: certs.filter((c) => c.title),
       template: state.template,
     };
   }
@@ -633,6 +828,79 @@ document.addEventListener("DOMContentLoaded", () => {
       eduContainer.appendChild(createEduEntry(e)),
     );
     if (!data.education?.length) eduContainer.appendChild(createEduEntry());
+    updateEduCounters();
+
+    // Projects
+    projContainer.innerHTML = "";
+    (data.projects || []).forEach((p) =>
+      projContainer.appendChild(createProjEntry(p)),
+    );
+    if (!data.projects?.length) projContainer.appendChild(createProjEntry());
+    updateProjCounters();
+
+    // Achievements
+    achievementContainer.innerHTML = "";
+    (data.achievements || []).forEach((a) =>
+      achievementContainer.appendChild(createAchEntry(a)),
+    );
+    if (!data.achievements?.length)
+      achievementContainer.appendChild(createAchEntry());
+    updateAchCounters();
+
+    // Certifications
+    certContainer.innerHTML = "";
+    (data.certifications || []).forEach((c) =>
+      certContainer.appendChild(createCertEntry(c)),
+    );
+    if (!data.certifications?.length)
+      certContainer.appendChild(createCertEntry());
+    updateCertCounters();
+  }
+
+  // ─── FIT RESUME TO PAGE (scale-to-fit) ────────────────
+  function cleanupScaleWrapper() {
+    const existing = document.querySelector('.resume-output-wrap');
+    if (existing) {
+      const el = existing.querySelector('.resume-output');
+      if (el) {
+        el.style.transform = '';
+        el.style.transformOrigin = '';
+        existing.parentNode.insertBefore(el, existing);
+      }
+      existing.remove();
+    }
+  }
+
+  function fitResumeToPage() {
+    cleanupScaleWrapper();
+
+    Promise.all([
+      document.fonts.ready,
+      new Promise(r => requestAnimationFrame(r))
+    ]).then(() => {
+      const el = document.querySelector('.resume-output');
+      if (!el) return;
+
+      const targetPx = Math.round(297 * 3.779527559); // 297mm -> px
+
+      if (el.scrollHeight <= targetPx) return;
+
+      const scale = targetPx / el.scrollHeight;
+
+      const wrap = document.createElement('div');
+      wrap.className = 'resume-output-wrap';
+      wrap.style.cssText = `width:210mm;height:297mm;overflow:hidden;margin:0 auto;`;
+
+      el.parentNode.insertBefore(wrap, el);
+      wrap.appendChild(el);
+
+      el.style.transformOrigin = 'top left';
+      el.style.transform = `scale(${scale})`;
+
+      if (scale < 0.35) {
+        console.warn(`Resume heavily scaled: ${Math.round(scale * 100)}%`);
+      }
+    });
   }
 
   // ─── RENDER RESUME ─────────────────────────────────────
@@ -789,6 +1057,7 @@ document.addEventListener("DOMContentLoaded", () => {
     state.lastData = data;
     state.lastAIContent = aiContent;
     preview.innerHTML = html;
+    fitResumeToPage();
   }
 
   // ─── FORM SUBMIT (WITH PAYMENT SAFETY) ────────────────
@@ -811,14 +1080,11 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       // Step 1: Create order via backend
       genStatus.textContent = "⏳ creating payment order...";
-      const orderRes = await fetch(
-        "https://resume-forge-blush.vercel.app/api/generate",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
-        },
-      );
+      const orderRes = await fetch(`${apiBase}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
       if (!orderRes.ok) {
         const err = await orderRes
@@ -853,19 +1119,16 @@ document.addEventListener("DOMContentLoaded", () => {
       genStatus.textContent = "⏳ payment verified! generating resume...";
       genBtn.querySelector(".btn-text").textContent = "generating...";
 
-      const confirmRes = await fetch(
-        "https://resume-forge-blush.vercel.app/api/confirm",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...data,
-            order_id: paymentResult.razorpay_order_id,
-            payment_id: paymentResult.razorpay_payment_id,
-            signature: paymentResult.razorpay_signature,
-          }),
-        },
-      );
+      const confirmRes = await fetch(`${apiBase}/api/confirm`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...data,
+          order_id: paymentResult.razorpay_order_id,
+          payment_id: paymentResult.razorpay_payment_id,
+          signature: paymentResult.razorpay_signature,
+        }),
+      });
 
       if (!confirmRes.ok) {
         const err = await confirmRes
@@ -881,6 +1144,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Step 4: Display the rendered HTML from backend
       state.lastHTML = result.html;
       preview.innerHTML = result.html;
+      fitResumeToPage();
 
       // Step 5: Save to history
       const historyEntry = {
@@ -915,6 +1179,13 @@ document.addEventListener("DOMContentLoaded", () => {
     state.isGenerating = false;
     genBtn.disabled = false;
     genBtn.querySelector(".btn-text").textContent = "generate resume";
+  });
+
+  // Save details in local storage
+  document.getElementById("save-details-btn").addEventListener("click", () => {
+    const data = getFormData();
+    localStorage.setItem("resumeForgeSavedDetails", JSON.stringify(data));
+    showToast("💾 Form details saved to local storage!", "success");
   });
 
   // ─── UPDATE COUNTER ────────────────────────────────────
@@ -965,15 +1236,46 @@ document.addEventListener("DOMContentLoaded", () => {
   renderHistory();
   updateGenCountDisplay();
 
-  // Dynamically replace the default static inputs to ensure counters and unique IDs are set up correctly
-  if (expContainer && expContainer.querySelector(".exp-entry")) {
-    expContainer.innerHTML = "";
-    expContainer.appendChild(createExpEntry());
-    updateExpCounters();
+  const savedDetails = localStorage.getItem("resumeForgeSavedDetails");
+  if (savedDetails) {
+    try {
+      fillFormFromData(JSON.parse(savedDetails));
+      showToast("💾 Auto-filled saved details", "info");
+    } catch (e) {
+      console.error("Failed to parse saved details", e);
+    }
+  } else {
+    // Dynamically replace the default static inputs to ensure counters and unique IDs are set up correctly
+    if (expContainer && expContainer.querySelector(".exp-entry")) {
+      expContainer.innerHTML = "";
+      expContainer.appendChild(createExpEntry());
+      updateExpCounters();
+    }
+    if (eduContainer && eduContainer.querySelector(".edu-entry")) {
+      eduContainer.innerHTML = "";
+      eduContainer.appendChild(createEduEntry());
+      updateEduCounters();
+    }
+    if (projContainer && projContainer.querySelector(".proj-entry")) {
+      projContainer.innerHTML = "";
+      projContainer.appendChild(createProjEntry());
+      updateProjCounters();
+    }
+    if (
+      achievementContainer &&
+      achievementContainer.querySelector(".achievement-entry")
+    ) {
+      achievementContainer.innerHTML = "";
+      achievementContainer.appendChild(createAchEntry());
+      updateAchCounters();
+    }
+    if (certContainer && certContainer.querySelector(".cert-entry")) {
+      certContainer.innerHTML = "";
+      certContainer.appendChild(createCertEntry());
+      updateCertCounters();
+    }
   }
-  if (eduContainer && eduContainer.querySelector(".edu-entry")) {
-    eduContainer.innerHTML = "";
-    eduContainer.appendChild(createEduEntry());
-    updateEduCounters();
-  }
+
+  // Load the initial template preview
+  loadTemplatePreview(state.template);
 });

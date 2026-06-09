@@ -414,12 +414,18 @@
                         </div>
                     </div>
 
-                    <!-- Generate -->
-                    <button type="submit" class="btn-generate" id="gen-btn">
-                        <span class="btn-icon">⚡</span>
-                        <span class="btn-text">generate resume</span>
-                        <span class="btn-price">₹10</span>
-                    </button>
+                    <!-- Generate & Save -->
+                    <div style="display: flex; gap: 0.6rem; margin-top: 1rem; width: 100%;">
+                        <button type="submit" class="btn-generate" id="gen-btn" style="flex: 2; margin: 0;">
+                            <span class="btn-icon">⚡</span>
+                            <span class="btn-text">generate resume</span>
+                            <span class="btn-price">₹10</span>
+                        </button>
+                        <button type="button" class="btn-generate" id="save-details-btn" style="flex: 1; margin: 0; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--text);">
+                            <span class="btn-icon">💾</span>
+                            <span class="btn-text">save details</span>
+                        </button>
+                    </div>
                     <div id="gen-status" class="gen-status"></div>
                 </form>
             </div>

@@ -217,7 +217,6 @@ body {
     padding: 0;
     box-shadow: 0 0 30px rgba(0,0,0,0.3);
     border-radius: 2px;
-    overflow: hidden;
 }
 
 /* Terminal template */
@@ -532,7 +531,7 @@ body {
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 0.3rem;
 }
-.exp-counter, .edu-counter, .proj-counter { font-size: 0.6rem; color: var(--text-dim); padding: 0.1rem 0.4rem; border: 1px solid var(--border); border-radius: 2px; }
+.exp-counter, .edu-counter, .proj-counter, .ach-counter, .cert-counter { font-size: 0.6rem; color: var(--text-dim); padding: 0.1rem 0.4rem; border: 1px solid var(--border); border-radius: 2px; }
 .remove-entry {
     background: transparent; border: none; color: rgba(255,51,85,0.5);
     font-size: 0.8rem; cursor: pointer; padding: 0.15rem;

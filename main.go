@@ -497,7 +497,7 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 
 	switch data.Template {
 	case "terminal":
-		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-terminal" style="width:210mm;height:297mm;background:#0f172a;color:#e2e8f0;font-family:'JetBrains Mono','Fira Code',monospace;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
+		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-terminal" style="width:210mm;min-height:297mm;background:#0f172a;color:#e2e8f0;font-family:'JetBrains Mono','Fira Code',monospace;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
 				<div style="flex:1;">
 					<!-- Terminal Header Bar -->
 					<div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:1rem;border-bottom:1px solid #334155;padding-bottom:0.5rem;">
@@ -553,7 +553,7 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "minimal":
-		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-minimal" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Inter',sans-serif;padding:18mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
+		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-minimal" style="width:210mm;min-height:297mm;background:#fff;color:#1e293b;font-family:'Inter',sans-serif;padding:18mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
 				<div style="flex:1;">
 					<div style="text-align:center;margin-bottom:1.5rem;">
 						<h1 style="font-size:2rem;font-weight:500;color:#0f172a;letter-spacing:1px;font-family:'Lora',serif;margin-bottom:0.25rem;">%s</h1>
@@ -590,7 +590,7 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "modern":
-		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-modern" style="width:210mm;height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;">
+		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-modern" style="width:210mm;min-height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;">
 				<div style="width:35%%;background:#0f172a;color:#f8fafc;padding:15mm 8mm 15mm 12mm;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;border-right:1px solid #1e293b;">
 					<div>
 						<h1 style="font-size:1.4rem;font-weight:800;color:#fff;line-height:1.2;margin:0 0 0.2rem 0;letter-spacing:-0.5px;">%s</h1>
@@ -626,7 +626,7 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "executive":
-		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-executive" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Lora',serif;padding:18mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
+		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-executive" style="width:210mm;min-height:297mm;background:#fff;color:#1e293b;font-family:'Lora',serif;padding:18mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
 				<div style="flex:1;">
 					<div style="text-align:center;margin-bottom:1.5rem;">
 						<h1 style="font-size:2.2rem;font-weight:700;color:#0f1e36;margin:0;letter-spacing:0.5px;font-family:'Playfair Display',serif;text-transform:uppercase;margin-bottom:0.2rem;">%s</h1>
@@ -664,7 +664,7 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "creative":
-		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-creative" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Poppins',sans-serif;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
+		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-creative" style="width:210mm;min-height:297mm;background:#fff;color:#1e293b;font-family:'Poppins',sans-serif;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
 				<div style="flex:1;">
 					<div style="background:linear-gradient(135deg,#6366f1 0%%,#a855f7 100%%);padding:1.4rem 1.6rem;text-align:center;border-radius:12px;margin-bottom:1.2rem;color:#fff;box-shadow:0 4px 20px rgba(99,102,241,0.15);">
 						<h1 style="font-size:1.8rem;font-weight:800;color:#fff;margin:0;letter-spacing:-0.5px;">%s</h1>
@@ -700,7 +700,7 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "timeline":
-		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-timeline" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
+		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-timeline" style="width:210mm;min-height:297mm;background:#fff;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
 				<div style="flex:1;">
 					<div style="background:#0f172a;border-radius:10px;padding:1.2rem 1.5rem;margin-bottom:1.2rem;color:#fff;display:flex;justify-content:space-between;align-items:center;">
 						<div>
@@ -738,7 +738,7 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	case "columns":
-		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-columns" style="width:210mm;height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;font-family:'Inter',sans-serif;">
+		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-columns" style="width:210mm;min-height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;box-sizing:border-box;font-family:'Inter',sans-serif;">
 				<div style="width:50%%;background:#f8fafc;padding:15mm;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;border-right:1px solid #e2e8f0;">
 					<div style="margin-bottom:1.5rem;">
 						<h1 style="font-size:1.6rem;font-weight:800;color:#0f172a;line-height:1.2;margin:0 0 0.2rem 0;letter-spacing:-0.5px;">%s</h1>
@@ -774,7 +774,7 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		)
 
 	default: // compact
-		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-compact" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Inter',sans-serif;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
+		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-compact" style="width:210mm;min-height:297mm;background:#fff;color:#1e293b;font-family:'Inter',sans-serif;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
 				<div style="flex:1;">
 					<div style="border-bottom:2px solid #0d9488;padding-bottom:0.6rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-end;">
 						<div>
@@ -922,7 +922,7 @@ func renderProjBlock(items []proj, escape func(string) string, style string) str
 			if i < len(items)-1 {
 				extra = `margin-bottom:0.6rem;`
 			}
-			b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:-1.15rem;top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#8b5cf6;font-size:0.65rem;margin-left:0.4rem;">[%s]</span></div></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;margin-top:0.15rem;">%s</div></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:calc(-0.8rem - 3px);top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#8b5cf6;font-size:0.65rem;margin-left:0.4rem;">[%s]</span></div></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;margin-top:0.15rem;">%s</div></div>`,
 				extra, escape(p.Title), escape(p.Tech), escape(p.Desc)))
 		}
 		b.WriteString(`</div></div>`)
@@ -1200,7 +1200,7 @@ func renderAchievementsBlock(items []achievement, escape func(string) string, st
 			if i < len(items)-1 {
 				extra = `margin-bottom:0.6rem;`
 			}
-			b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:-1.15rem;top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#8b5cf6;font-size:0.65rem;margin-left:0.4rem;">[%s]</span></div></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;margin-top:0.15rem;">%s</div></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:calc(-0.8rem - 3px);top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#8b5cf6;font-size:0.65rem;margin-left:0.4rem;">[%s]</span></div></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;margin-top:0.15rem;">%s</div></div>`,
 				extra, escape(a.Title), escape(a.Date), escape(a.Description)))
 		}
 		b.WriteString(`</div></div>`)
@@ -1296,7 +1296,7 @@ func renderCertificationsBlock(items []certification, escape func(string) string
 			if c.Link != "" {
 				linkStr = fmt.Sprintf(` <a href="%s" style="color:#8b5cf6;font-size:0.6rem;text-decoration:underline;">[link]</a>`, escape(c.Link))
 			}
-			b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:-1.15rem;top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s%s <span style="font-weight:500;color:#8b5cf6;">— %s</span></div><span style="font-size:0.62rem;color:#6b7280;font-weight:500;margin-left:auto;">%s</span></div></div>`,
+			b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:calc(-0.8rem - 3px);top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s%s <span style="font-weight:500;color:#8b5cf6;">— %s</span></div><span style="font-size:0.62rem;color:#6b7280;font-weight:500;margin-left:auto;">%s</span></div></div>`,
 				extra, escape(c.Title), linkStr, escape(c.Issuer), escape(c.Date)))
 		}
 		b.WriteString(`</div></div>`)
@@ -1396,7 +1396,7 @@ func renderExpBlockTimeline(items []exp, escape func(string) string) string {
 		if i < len(items)-1 {
 			extra = `margin-bottom:0.6rem;`
 		}
-		b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:-1.15rem;top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.15rem;"><span style="font-size:0.75rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#8b5cf6;">@ %s</span></span><span style="font-size:0.62rem;color:#6b7280;font-weight:500;">%s — %s</span></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;white-space:pre-line;">%s</div></div>`,
+		b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:calc(-0.8rem - 3px);top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.15rem;"><span style="font-size:0.75rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#8b5cf6;">@ %s</span></span><span style="font-size:0.62rem;color:#6b7280;font-weight:500;">%s — %s</span></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;white-space:pre-line;">%s</div></div>`,
 			extra, escape(e.Role), escape(e.Company), escape(e.From), escape(e.To), escape(e.Description)))
 	}
 	b.WriteString(`</div></div>`)
@@ -1416,7 +1416,7 @@ func renderEduBlockTimeline(items []edu, escape func(string) string) string {
 		if i < len(items)-1 {
 			extra = `margin-bottom:0.6rem;`
 		}
-		b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:-1.15rem;top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#8b5cf6;">at %s</span></div><span style="font-size:0.62rem;color:#6b7280;font-weight:500;margin-left:auto;">%s — %s</span></div></div>`,
+		b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:calc(-0.8rem - 3px);top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#8b5cf6;">at %s</span></div><span style="font-size:0.62rem;color:#6b7280;font-weight:500;margin-left:auto;">%s — %s</span></div></div>`,
 			extra, escape(e.Degree), escape(e.School), escape(e.From), escape(e.To)))
 	}
 	b.WriteString(`</div></div>`)
@@ -1568,6 +1568,113 @@ func handleConfirm(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+func handlePreview(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		writeError(w, "Method not allowed", 405)
+		return
+	}
+
+	template := r.URL.Query().Get("template")
+	if template == "" {
+		template = "terminal"
+	}
+
+	mockData := GenerateRequest{
+		Name:      "Jane Doe",
+		Role:      "Senior Full Stack Engineer",
+		Email:     "jane.doe@example.com",
+		Phone:     "+1 (555) 019-2834",
+		Location:  "San Francisco, CA",
+		Portfolio: "github.com/janedoe",
+		Summary:   "Results-driven senior engineer with 8+ years of experience building scalable distributed systems and robust web applications. Expert in Go, TypeScript, React, and cloud-native architecture.",
+		Skills:    "Go, TypeScript, JavaScript, Python, React, Next.js, Node.js, Docker, Kubernetes, AWS, PostgreSQL, MongoDB, Redis, Git, CI/CD",
+		SkillsCategories: SkillsCategories{
+			Languages:  "Go, TypeScript, JavaScript, Python, SQL",
+			Frameworks: "React, Next.js, Node.js, Gin, Express",
+			Tools:      "Docker, Kubernetes, Git, GitHub Actions",
+			Databases:  "PostgreSQL, MongoDB, Redis",
+			Cloud:      "AWS (EC2, S3, RDS, Lambda), GCP",
+		},
+		Experience: []ExpEntry{
+			{
+				Company: "TechCorp Solutions",
+				Role:    "Lead Software Engineer",
+				From:    "2022",
+				To:      "Present",
+				Desc:    "Architected and deployed a real-time analytics dashboard using Go and WebSockets, boosting query performance by 40%.\nLed a team of 5 engineers to rebuild the core customer API, reducing latency from 250ms to 45ms.",
+			},
+			{
+				Company: "Innovate Labs",
+				Role:    "Senior Developer",
+				From:    "2018",
+				To:      "2022",
+				Desc:    "Migrated legacy monolithic platform to a modern microservices architecture on AWS ECS.\nOptimized database schema and implemented Redis caching layer, saving $12,000 in monthly infrastructure costs.",
+			},
+		},
+		Education: []EduEntry{
+			{
+				School: "Stanford University",
+				Degree: "M.S. in Computer Science",
+				From:   "2016",
+				To:     "2018",
+			},
+			{
+				School: "University of California, Berkeley",
+				Degree: "B.S. in Electrical Engineering & Computer Science",
+				From:   "2012",
+				To:     "2016",
+			},
+		},
+		Projects: []ProjEntry{
+			{
+				Title: "Distributed Key-Value Store",
+				Desc:  "Developed a Raft-consensus based distributed key-value database in Go with partition tolerance.",
+				Tech:  "Go, Raft Protocol, gRPC, Protobuf",
+			},
+			{
+				Title: "Resume Forge",
+				Desc:  "Created a premium resume builder generating stunning PDF exports in real-time.",
+				Tech:  "Go, HTML/CSS, Vanilla JS, Gemini API",
+			},
+		},
+		Achievements: []achievement{
+			{
+				Title:       "Innovator of the Year Award",
+				Date:        "2023",
+				Description: "Awarded by TechCorp for designing an automated serverless media transcoding pipeline.",
+			},
+			{
+				Title:       "Hackathon First Place",
+				Date:        "2021",
+				Description: "Won 1st place out of 120 participants at InnovateLabs Annual Hackathon.",
+			},
+		},
+		Certifications: []certification{
+			{
+				Title:  "AWS Certified Solutions Architect – Professional",
+				Issuer: "Amazon Web Services",
+				Date:   "2024",
+				Link:   "https://aws.amazon.com",
+			},
+			{
+				Title:  "Certified Kubernetes Administrator (CKA)",
+				Issuer: "The Linux Foundation",
+				Date:   "2023",
+				Link:   "https://linuxfoundation.org",
+			},
+		},
+		Template: template,
+	}
+
+	html := renderResumeHTML(mockData, nil)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	w.WriteHeader(200)
+	w.Write([]byte(html))
+}
+
 func main() {
 	port := "3000"
 	if p := os.Getenv("PORT"); p != "" {
@@ -1602,6 +1709,7 @@ func main() {
 	}))
 	mux.HandleFunc("/api/generate", cors(handleGenerate))
 	mux.HandleFunc("/api/confirm", cors(handleConfirm))
+	mux.HandleFunc("/api/preview", cors(handlePreview))
 
  	log.Printf("✦ Resume Forge backend on port %s", port)
  	log.Printf("✦ Gemini configured: %v", geminiKey != "")
