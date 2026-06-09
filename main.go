@@ -43,6 +43,19 @@ type proj struct {
 	Tech  string
 }
 
+type achievement struct {
+	Title       string
+	Date        string
+	Description string
+}
+
+type certification struct {
+	Title  string
+	Issuer string
+	Date   string
+	Link   string
+}
+
 // ── Request types ──────────────────────────────────────────
 type GenerateRequest struct {
 	Name             string            `json:"name"`
@@ -62,6 +75,8 @@ type GenerateRequest struct {
 	Experience       []ExpEntry        `json:"experience"`
 	Education        []EduEntry        `json:"education"`
 	Projects         []ProjEntry       `json:"projects"`
+	Achievements     []achievement     `json:"achievements"`
+	Certifications   []certification   `json:"certifications"`
 	Template         string            `json:"template"`
 }
 
@@ -211,6 +226,8 @@ Summary: %s
 Experience: %s
 Education: %s
 Projects: %s
+Achievements: %s
+Certifications: %s
 Skills: %s
 
 Return ONLY valid JSON with this exact structure (no markdown, no code fences):
@@ -224,6 +241,12 @@ Return ONLY valid JSON with this exact structure (no markdown, no code fences):
   ],
   "projects": [
     {"title": "...", "desc": "enhanced description...", "tech": "..."}
+  ],
+  "achievements": [
+    {"title": "...", "date": "...", "description": "..."}
+  ],
+  "certifications": [
+    {"title": "...", "issuer": "...", "date": "...", "link": "..."}
   ]
 }
 
@@ -232,7 +255,7 @@ CRITICAL INSTRUCTIONS:
 2. In the education array, do NOT swap the school name and degree under any circumstances. The "school" field must contain the name of the school or university (e.g., "Stanford University"), and the "degree" field must contain the degree name (e.g., "BS in Computer Science").
 3. In the projects array, do NOT omit any projects. The "desc" field should be a concise but professional description of the project, and the "tech" field should list the tech stack (e.g., "Go, React, Docker").`,
 		data.Name, data.Role, data.Email, data.Phone, data.Location, data.Portfolio,
-		data.Summary, toJSON(data.Experience), toJSON(data.Education), toJSON(data.Projects), data.Skills)
+		data.Summary, toJSON(data.Experience), toJSON(data.Education), toJSON(data.Projects), toJSON(data.Achievements), toJSON(data.Certifications), data.Skills)
 
 	body := map[string]interface{}{
 		"contents": []map[string]interface{}{
@@ -303,6 +326,8 @@ CRITICAL INSTRUCTIONS:
 			"experience": toSliceInterface(data.Experience),
 			"education":  toSliceInterface(data.Education),
 			"projects":   toSliceInterface(data.Projects),
+			"achievements": toSliceInterface(data.Achievements),
+			"certifications": toSliceInterface(data.Certifications),
 		}, nil
 	}
 
@@ -413,6 +438,47 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 		}
 	}
 
+	var achievements []achievement
+	if aiContent != nil {
+		if aiAch, ok := aiContent["achievements"].([]interface{}); ok {
+			for _, a := range aiAch {
+				if am, ok := a.(map[string]interface{}); ok {
+					achievements = append(achievements, achievement{
+						Title:       toString(am["title"]),
+						Date:        toString(am["date"]),
+						Description: toString(am["description"]),
+					})
+				}
+			}
+		}
+	}
+	if len(achievements) == 0 {
+		for _, a := range data.Achievements {
+			achievements = append(achievements, a)
+		}
+	}
+
+	var certifications []certification
+	if aiContent != nil {
+		if aiCert, ok := aiContent["certifications"].([]interface{}); ok {
+			for _, c := range aiCert {
+				if cm, ok := c.(map[string]interface{}); ok {
+					certifications = append(certifications, certification{
+						Title:  toString(cm["title"]),
+						Issuer: toString(cm["issuer"]),
+						Date:   toString(cm["date"]),
+						Link:   toString(cm["link"]),
+					})
+				}
+			}
+		}
+	}
+	if len(certifications) == 0 {
+		for _, c := range data.Certifications {
+			certifications = append(certifications, c)
+		}
+	}
+
 	escape := func(s string) string {
 		s = strings.ReplaceAll(s, "&", "&amp;")
 		s = strings.ReplaceAll(s, "<", "&lt;")
@@ -432,40 +498,46 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 	switch data.Template {
 	case "terminal":
 		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-terminal" style="width:210mm;height:297mm;background:#0f172a;color:#e2e8f0;font-family:'JetBrains Mono','Fira Code',monospace;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
-			<div style="flex:1;">
-				<!-- Terminal Header Bar -->
-				<div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:1rem;border-bottom:1px solid #334155;padding-bottom:0.5rem;">
-					<span style="width:10px;height:10px;border-radius:50%%;background:#ef4444;display:inline-block;"></span>
-					<span style="width:10px;height:10px;border-radius:50%%;background:#f59e0b;display:inline-block;"></span>
-					<span style="width:10px;height:10px;border-radius:50%%;background:#10b981;display:inline-block;"></span>
-					<span style="margin-left:0.5rem;font-size:0.65rem;color:#64748b;letter-spacing:1px;">bash - resume.sh</span>
-				</div>
-				
-				<div style="margin-bottom:1rem;">
-					<h1 style="font-size:1.6rem;font-weight:700;color:#10b981;margin:0;letter-spacing:-0.5px;">%s</h1>
-					<div style="color:#38bdf8;font-size:0.8rem;margin-top:0.2rem;font-weight:500;">$ type role --name="%s"</div>
-					<div style="display:flex;flex-wrap:wrap;gap:1rem;margin-top:0.5rem;font-size:0.68rem;color:#94a3b8;">%s%s%s%s</div>
-				</div>
+				<div style="flex:1;">
+					<!-- Terminal Header Bar -->
+					<div style="display:flex;align-items:center;gap:0.4rem;margin-bottom:1rem;border-bottom:1px solid #334155;padding-bottom:0.5rem;">
+						<span style="width:10px;height:10px;border-radius:50%%;background:#ef4444;display:inline-block;"></span>
+						<span style="width:10px;height:10px;border-radius:50%%;background:#f59e0b;display:inline-block;"></span>
+						<span style="width:10px;height:10px;border-radius:50%%;background:#10b981;display:inline-block;"></span>
+						<span style="margin-left:0.5rem;font-size:0.65rem;color:#64748b;letter-spacing:1px;">bash - resume.sh</span>
+					</div>
+					
+					<div style="margin-bottom:1rem;">
+						<h1 style="font-size:1.6rem;font-weight:700;color:#10b981;margin:0;letter-spacing:-0.5px;">%s</h1>
+						<div style="color:#38bdf8;font-size:0.8rem;margin-top:0.2rem;font-weight:500;">$ type role --name="%s"</div>
+						<div style="display:flex;flex-wrap:wrap;gap:1rem;margin-top:0.5rem;font-size:0.68rem;color:#94a3b8;">%s%s%s%s</div>
+					</div>
 
-				<div style="margin-top:1.2rem;">
-					<div style="font-size:0.75rem;font-weight:bold;color:#10b981;margin-bottom:0.4rem;text-transform:lowercase;">// summary</div>
-					<div style="font-size:0.68rem;color:#cbd5e1;line-height:1.4;background:#1e293b;padding:0.6rem 0.8rem;border-radius:4px;border-left:3px solid #38bdf8;">%s</div>
-				</div>
+					<div style="margin-top:1.2rem;">
+						<div style="font-size:0.75rem;font-weight:bold;color:#10b981;margin-bottom:0.4rem;text-transform:lowercase;">// summary</div>
+						<div style="font-size:0.68rem;color:#cbd5e1;line-height:1.4;background:#1e293b;padding:0.6rem 0.8rem;border-radius:4px;border-left:3px solid #38bdf8;">%s</div>
+					</div>
 
-				<div style="margin-top:1.2rem;">
-					%s
+					<div style="margin-top:1.2rem;">
+						%s
+					</div>
+					<div style="margin-top:1.2rem;">
+						%s
+					</div>
+					<div style="margin-top:1.2rem;">
+						%s
+					</div>
+					<div style="margin-top:1.2rem;">
+						%s
+					</div>
+					<div style="margin-top:1.2rem;">
+						%s
+					</div>
+					<div style="margin-top:1.2rem;">
+						%s
+					</div>
 				</div>
-				<div style="margin-top:1.2rem;">
-					%s
-				</div>
-				<div style="margin-top:1.2rem;">
-					%s
-				</div>
-				<div style="margin-top:1.2rem;">
-					%s
-				</div>
-			</div>
-		</div>`,
+			</div>`,
 			escape(data.Name), escape(data.Role),
 			cond(data.Email != "", `<span>✉ `+escape(data.Email)+`</span>`, ""),
 			cond(data.Phone != "", `<span>📞 `+escape(data.Phone)+`</span>`, ""),
@@ -473,32 +545,36 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 			cond(data.Portfolio != "", `<span>🔗 `+escape(data.Portfolio)+`</span>`, ""),
 			escape(summary),
 			renderExpBlock("experience", experiences, escape, "rt"),
+			renderAchievementsBlock(achievements, escape, "rt"),
 			renderEduBlock("education", educations, escape, "rt"),
 			renderProjBlock(projects, escape, "rt"),
+			renderCertificationsBlock(certifications, escape, "rt"),
 			renderSkillsBlockCategorized(skills, categorizedSkills, hasCategorized, escape, "rt"),
 		)
 
 	case "minimal":
 		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-minimal" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Inter',sans-serif;padding:18mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
-			<div style="flex:1;">
-				<div style="text-align:center;margin-bottom:1.5rem;">
-					<h1 style="font-size:2rem;font-weight:500;color:#0f172a;letter-spacing:1px;font-family:'Lora',serif;margin-bottom:0.25rem;">%s</h1>
-					<div style="color:#64748b;font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;font-weight:500;margin-bottom:0.6rem;">%s</div>
-					<div style="font-size:0.7rem;color:#64748b;display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;">%s%s%s%s</div>
+				<div style="flex:1;">
+					<div style="text-align:center;margin-bottom:1.5rem;">
+						<h1 style="font-size:2rem;font-weight:500;color:#0f172a;letter-spacing:1px;font-family:'Lora',serif;margin-bottom:0.25rem;">%s</h1>
+						<div style="color:#64748b;font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;font-weight:500;margin-bottom:0.6rem;">%s</div>
+						<div style="font-size:0.7rem;color:#64748b;display:flex;justify-content:center;flex-wrap:wrap;gap:1rem;">%s%s%s%s</div>
+					</div>
+					<div style="border-bottom:1px solid #e2e8f0;margin-bottom:1.2rem;"></div>
+					
+					<div style="margin-bottom:1.2rem;">
+						<div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#0f172a;margin-bottom:0.4rem;font-family:'Lora',serif;">Summary</div>
+						<p style="font-size:0.7rem;line-height:1.5;color:#334155;">%s</p>
+					</div>
+					
+					%s
+					%s
+					%s
+					%s
+					%s
+					%s
 				</div>
-				<div style="border-bottom:1px solid #e2e8f0;margin-bottom:1.2rem;"></div>
-				
-				<div style="margin-bottom:1.2rem;">
-					<div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#0f172a;margin-bottom:0.4rem;font-family:'Lora',serif;">Summary</div>
-					<p style="font-size:0.7rem;line-height:1.5;color:#334155;">%s</p>
-				</div>
-				
-				%s
-				%s
-				%s
-				%s
-			</div>
-		</div>`,
+			</div>`,
 			escape(data.Name), escape(data.Role),
 			cond(data.Email != "", `<span>`+escape(data.Email)+`</span>`, ""),
 			cond(data.Phone != "", `<span>`+escape(data.Phone)+`</span>`, ""),
@@ -506,31 +582,35 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 			cond(data.Portfolio != "", `<span>`+escape(data.Portfolio)+`</span>`, ""),
 			escape(summary),
 			renderExpBlock("Experience", experiences, escape, "rm"),
+			renderAchievementsBlock(achievements, escape, "rm"),
 			renderEduBlock("Education", educations, escape, "rm"),
 			renderProjBlock(projects, escape, "rm"),
+			renderCertificationsBlock(certifications, escape, "rm"),
 			renderSkillsBlockCategorized(skills, categorizedSkills, hasCategorized, escape, "rm"),
 		)
 
 	case "modern":
 		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-modern" style="width:210mm;height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;">
-			<div style="width:35%%;background:#0f172a;color:#f8fafc;padding:15mm 8mm 15mm 12mm;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;border-right:1px solid #1e293b;">
-				<div>
-					<h1 style="font-size:1.4rem;font-weight:800;color:#fff;line-height:1.2;margin:0 0 0.2rem 0;letter-spacing:-0.5px;">%s</h1>
-					<div style="font-size:0.72rem;color:#38bdf8;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.2rem;">%s</div>
-					<div style="font-size:0.68rem;margin-top:1.5rem;line-height:1.5;color:#94a3b8;display:flex;flex-direction:column;gap:0.4rem;">%s%s%s%s</div>
+				<div style="width:35%%;background:#0f172a;color:#f8fafc;padding:15mm 8mm 15mm 12mm;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;border-right:1px solid #1e293b;">
+					<div>
+						<h1 style="font-size:1.4rem;font-weight:800;color:#fff;line-height:1.2;margin:0 0 0.2rem 0;letter-spacing:-0.5px;">%s</h1>
+						<div style="font-size:0.72rem;color:#38bdf8;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:1.2rem;">%s</div>
+						<div style="font-size:0.68rem;margin-top:1.5rem;line-height:1.5;color:#94a3b8;display:flex;flex-direction:column;gap:0.4rem;">%s%s%s%s</div>
+						%s
+					</div>
 					%s
 				</div>
-				%s
-			</div>
-			<div style="width:65%%;padding:15mm 12mm 15mm 8mm;display:flex;flex-direction:column;box-sizing:border-box;justify-content:flex-start;color:#1e293b;">
-				<div style="margin-bottom:1.2rem;">
-					<div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f172a;border-bottom:2px solid #38bdf8;padding-bottom:0.25rem;margin-bottom:0.5rem;width:fit-content;">About Me</div>
-					<p style="font-size:0.68rem;color:#334155;line-height:1.5;">%s</p>
+				<div style="width:65%%;padding:15mm 12mm 15mm 8mm;display:flex;flex-direction:column;box-sizing:border-box;justify-content:flex-start;color:#1e293b;">
+					<div style="margin-bottom:1.2rem;">
+						<div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f172a;border-bottom:2px solid #38bdf8;padding-bottom:0.25rem;margin-bottom:0.5rem;width:fit-content;">About Me</div>
+						<p style="font-size:0.68rem;color:#334155;line-height:1.5;">%s</p>
+					</div>
+					%s
+					%s
+					%s
+					%s
 				</div>
-				%s
-				%s
-			</div>
-		</div>`,
+			</div>`,
 			escape(data.Name), escape(data.Role),
 			cond(data.Email != "", `<div>✉ `+escape(data.Email)+`</div>`, ""),
 			cond(data.Phone != "", `<div>📞 `+escape(data.Phone)+`</div>`, ""),
@@ -540,31 +620,35 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 			renderSidebarEdu(educations, escape),
 			escape(summary),
 			renderExpBlock("Experience", experiences, escape, "mod"),
+			renderAchievementsBlock(achievements, escape, "mod"),
 			renderProjBlock(projects, escape, "mod"),
+			renderCertificationsBlock(certifications, escape, "mod"),
 		)
 
 	case "executive":
 		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-executive" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Lora',serif;padding:18mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
-			<div style="flex:1;">
-				<div style="text-align:center;margin-bottom:1.5rem;">
-					<h1 style="font-size:2.2rem;font-weight:700;color:#0f1e36;margin:0;letter-spacing:0.5px;font-family:'Playfair Display',serif;text-transform:uppercase;margin-bottom:0.2rem;">%s</h1>
-					<div style="font-size:0.95rem;color:#b45309;margin-top:0.2rem;font-weight:600;font-style:italic;letter-spacing:1px;">%s</div>
-					<div style="font-size:0.72rem;color:#475569;margin-top:0.6rem;display:flex;justify-content:center;flex-wrap:wrap;gap:1.2rem;font-family:'Lora',serif;font-style:italic;">%s%s%s%s</div>
+				<div style="flex:1;">
+					<div style="text-align:center;margin-bottom:1.5rem;">
+						<h1 style="font-size:2.2rem;font-weight:700;color:#0f1e36;margin:0;letter-spacing:0.5px;font-family:'Playfair Display',serif;text-transform:uppercase;margin-bottom:0.2rem;">%s</h1>
+						<div style="font-size:0.95rem;color:#b45309;margin-top:0.2rem;font-weight:600;font-style:italic;letter-spacing:1px;">%s</div>
+						<div style="font-size:0.72rem;color:#475569;margin-top:0.6rem;display:flex;justify-content:center;flex-wrap:wrap;gap:1.2rem;font-family:'Lora',serif;font-style:italic;">%s%s%s%s</div>
+					</div>
+					<div style="border-top:1px solid #b45309;border-bottom:1px solid #b45309;padding:0.15rem 0;margin-bottom:1.5rem;">
+						<div style="border-top:0.5px solid #b45309;border-bottom:0.5px solid #b45309;height:1px;"></div>
+					</div>
+					
+					<div style="margin-bottom:1.2rem;">
+						<div style="font-size:0.8rem;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.4rem;font-family:'Playfair Display',serif;">Professional Summary</div>
+						<p style="font-size:0.72rem;color:#334155;line-height:1.6;font-family:'Lora',serif;">%s</p>
+					</div>
+					%s
+					%s
+					%s
+					%s
+					%s
+					%s
 				</div>
-				<div style="border-top:1px solid #b45309;border-bottom:1px solid #b45309;padding:0.15rem 0;margin-bottom:1.5rem;">
-					<div style="border-top:0.5px solid #b45309;border-bottom:0.5px solid #b45309;height:1px;"></div>
-				</div>
-				
-				<div style="margin-bottom:1.2rem;">
-					<div style="font-size:0.8rem;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.4rem;font-family:'Playfair Display',serif;">Professional Summary</div>
-					<p style="font-size:0.72rem;color:#334155;line-height:1.6;font-family:'Lora',serif;">%s</p>
-				</div>
-				%s
-				%s
-				%s
-				%s
-			</div>
-		</div>`,
+			</div>`,
 			escape(data.Name), escape(data.Role),
 			cond(data.Email != "", `<span style="color:#b45309;margin-right:0.2rem;">✉</span>`+escape(data.Email), ""),
 			cond(data.Phone != "", `<span style="color:#b45309;margin-right:0.2rem;">📞</span>`+escape(data.Phone), ""),
@@ -572,31 +656,35 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 			cond(data.Portfolio != "", `<span style="color:#b45309;margin-right:0.2rem;">🔗</span>`+escape(data.Portfolio), ""),
 			escape(summary),
 			renderExpBlockExecutive(experiences, escape),
+			renderAchievementsBlock(achievements, escape, "exec"),
 			renderEduBlockExecutive(educations, escape),
 			renderProjBlock(projects, escape, "exec"),
+			renderCertificationsBlock(certifications, escape, "exec"),
 			renderSkillsBlockCategorized(skills, categorizedSkills, hasCategorized, escape, "exec"),
 		)
 
 	case "creative":
 		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-creative" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Poppins',sans-serif;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
-			<div style="flex:1;">
-				<div style="background:linear-gradient(135deg,#6366f1 0%%,#a855f7 100%%);padding:1.4rem 1.6rem;text-align:center;border-radius:12px;margin-bottom:1.2rem;color:#fff;box-shadow:0 4px 20px rgba(99,102,241,0.15);">
-					<h1 style="font-size:1.8rem;font-weight:800;color:#fff;margin:0;letter-spacing:-0.5px;">%s</h1>
-					<div style="font-size:0.85rem;color:#f3e8ff;margin-top:0.2rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;">%s</div>
-					<div style="font-size:0.68rem;margin-top:0.5rem;display:flex;justify-content:center;flex-wrap:wrap;gap:0.8rem;color:#f3e8ff;">%s%s%s%s</div>
+				<div style="flex:1;">
+					<div style="background:linear-gradient(135deg,#6366f1 0%%,#a855f7 100%%);padding:1.4rem 1.6rem;text-align:center;border-radius:12px;margin-bottom:1.2rem;color:#fff;box-shadow:0 4px 20px rgba(99,102,241,0.15);">
+						<h1 style="font-size:1.8rem;font-weight:800;color:#fff;margin:0;letter-spacing:-0.5px;">%s</h1>
+						<div style="font-size:0.85rem;color:#f3e8ff;margin-top:0.2rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;">%s</div>
+						<div style="font-size:0.68rem;margin-top:0.5rem;display:flex;justify-content:center;flex-wrap:wrap;gap:0.8rem;color:#f3e8ff;">%s%s%s%s</div>
+					</div>
+					
+					<div style="margin-bottom:1.2rem;background:#f5f3ff;border-radius:12px;padding:0.8rem 1rem;border-left:4px solid #8b5cf6;">
+						<div style="font-size:0.75rem;font-weight:700;color:#6d28d9;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.25rem;">✨ About Me</div>
+						<p style="font-size:0.68rem;color:#4c1d95;line-height:1.45;">%s</p>
+					</div>
+					
+					%s
+					%s
+					%s
+					%s
+					%s
+					%s
 				</div>
-				
-				<div style="margin-bottom:1.2rem;background:#f5f3ff;border-radius:12px;padding:0.8rem 1rem;border-left:4px solid #8b5cf6;">
-					<div style="font-size:0.75rem;font-weight:700;color:#6d28d9;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.25rem;">✨ About Me</div>
-					<p style="font-size:0.68rem;color:#4c1d95;line-height:1.45;">%s</p>
-				</div>
-				
-				%s
-				%s
-				%s
-				%s
-			</div>
-		</div>`,
+			</div>`,
 			escape(data.Name), escape(data.Role),
 			cond(data.Email != "", `<span>📧 `+escape(data.Email)+`</span>`, ""),
 			cond(data.Phone != "", `<span>📱 `+escape(data.Phone)+`</span>`, ""),
@@ -604,33 +692,37 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 			cond(data.Portfolio != "", `<span>🌐 `+escape(data.Portfolio)+`</span>`, ""),
 			escape(summary),
 			renderExpBlockCreative(experiences, escape),
+			renderAchievementsBlock(achievements, escape, "cr"),
 			renderEduBlockCreative(educations, escape),
 			renderProjBlock(projects, escape, "cr"),
+			renderCertificationsBlock(certifications, escape, "cr"),
 			renderSkillsBlockCategorized(skills, categorizedSkills, hasCategorized, escape, "cr"),
 		)
 
 	case "timeline":
 		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-timeline" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Plus Jakarta Sans',sans-serif;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
-			<div style="flex:1;">
-				<div style="background:#0f172a;border-radius:10px;padding:1.2rem 1.5rem;margin-bottom:1.2rem;color:#fff;display:flex;justify-content:space-between;align-items:center;">
-					<div>
-						<h1 style="font-size:1.6rem;font-weight:800;color:#fff;margin:0;letter-spacing:-0.5px;">%s</h1>
-						<div style="font-size:0.8rem;color:#38bdf8;margin-top:0.15rem;font-weight:600;">%s</div>
+				<div style="flex:1;">
+					<div style="background:#0f172a;border-radius:10px;padding:1.2rem 1.5rem;margin-bottom:1.2rem;color:#fff;display:flex;justify-content:space-between;align-items:center;">
+						<div>
+							<h1 style="font-size:1.6rem;font-weight:800;color:#fff;margin:0;letter-spacing:-0.5px;">%s</h1>
+							<div style="font-size:0.8rem;color:#38bdf8;margin-top:0.15rem;font-weight:600;">%s</div>
+						</div>
+						<div style="font-size:0.68rem;color:#94a3b8;line-height:1.45;text-align:right;">%s%s%s%s</div>
 					</div>
-					<div style="font-size:0.68rem;color:#94a3b8;line-height:1.45;text-align:right;">%s%s%s%s</div>
+					
+					<div style="margin-bottom:1.2rem;">
+						<div style="font-size:0.78rem;font-weight:700;color:#4f46e5;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.4rem;width:fit-content;">About</div>
+						<p style="font-size:0.68rem;color:#334155;line-height:1.5;">%s</p>
+					</div>
+					
+					%s
+					%s
+					%s
+					%s
+					%s
+					%s
 				</div>
-				
-				<div style="margin-bottom:1.2rem;">
-					<div style="font-size:0.78rem;font-weight:700;color:#4f46e5;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.4rem;width:fit-content;">About</div>
-					<p style="font-size:0.68rem;color:#334155;line-height:1.5;">%s</p>
-				</div>
-				
-				%s
-				%s
-				%s
-				%s
-			</div>
-		</div>`,
+			</div>`,
 			escape(data.Name), escape(data.Role),
 			cond(data.Email != "", `<span>✉ `+escape(data.Email)+`</span>`, ""),
 			cond(data.Phone != "", `<span>📞 `+escape(data.Phone)+`</span>`, ""),
@@ -638,31 +730,35 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 			cond(data.Portfolio != "", `<span>🔗 `+escape(data.Portfolio)+`</span>`, ""),
 			escape(summary),
 			renderExpBlockTimeline(experiences, escape),
+			renderAchievementsBlock(achievements, escape, "tl"),
 			renderEduBlockTimeline(educations, escape),
 			renderProjBlock(projects, escape, "tl"),
+			renderCertificationsBlock(certifications, escape, "tl"),
 			renderSkillsBlockCategorized(skills, categorizedSkills, hasCategorized, escape, "tl"),
 		)
 
 	case "columns":
 		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-columns" style="width:210mm;height:297mm;display:flex;background:#fff;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;font-family:'Inter',sans-serif;">
-			<div style="width:50%%;background:#f8fafc;padding:15mm;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;border-right:1px solid #e2e8f0;">
-				<div style="margin-bottom:1.5rem;">
-					<h1 style="font-size:1.6rem;font-weight:800;color:#0f172a;line-height:1.2;margin:0 0 0.2rem 0;letter-spacing:-0.5px;">%s</h1>
-					<div style="font-size:0.85rem;color:#4f46e5;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">%s</div>
-					<div style="font-size:0.68rem;color:#475569;line-height:1.6;display:flex;flex-direction:column;gap:0.25rem;">%s%s%s%s</div>
+				<div style="width:50%%;background:#f8fafc;padding:15mm;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;border-right:1px solid #e2e8f0;">
+					<div style="margin-bottom:1.5rem;">
+						<h1 style="font-size:1.6rem;font-weight:800;color:#0f172a;line-height:1.2;margin:0 0 0.2rem 0;letter-spacing:-0.5px;">%s</h1>
+						<div style="font-size:0.85rem;color:#4f46e5;font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">%s</div>
+						<div style="font-size:0.68rem;color:#475569;line-height:1.6;display:flex;flex-direction:column;gap:0.25rem;">%s%s%s%s</div>
+					</div>
+					<div style="margin-bottom:1.5rem;">
+						<div style="font-size:0.78rem;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #4f46e5;padding-bottom:0.2rem;margin-bottom:0.4rem;width:fit-content;">Summary</div>
+						<p style="font-size:0.68rem;color:#334155;line-height:1.5;">%s</p>
+					</div>
+					%s
 				</div>
-				<div style="margin-bottom:1.5rem;">
-					<div style="font-size:0.78rem;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #4f46e5;padding-bottom:0.2rem;margin-bottom:0.4rem;width:fit-content;">Summary</div>
-					<p style="font-size:0.68rem;color:#334155;line-height:1.5;">%s</p>
+				<div style="width:50%%;padding:15mm;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;color:#1e293b;">
+					%s
+					%s
+					%s
+					%s
+					%s
 				</div>
-				%s
-			</div>
-			<div style="width:50%%;padding:15mm;display:flex;flex-direction:column;justify-content:flex-start;box-sizing:border-box;color:#1e293b;">
-				%s
-				%s
-				%s
-			</div>
-		</div>`,
+			</div>`,
 			escape(data.Name), escape(data.Role),
 			cond(data.Email != "", `<div>✉ `+escape(data.Email)+`</div>`, ""),
 			cond(data.Phone != "", `<div>📞 `+escape(data.Phone)+`</div>`, ""),
@@ -671,32 +767,36 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 			escape(summary),
 			renderSkillsBlockCategorized(skills, categorizedSkills, hasCategorized, escape, "cl"),
 			renderExpBlock("Experience", experiences, escape, "cp"),
+			renderAchievementsBlock(achievements, escape, "cp"),
 			renderEduBlock("Education", educations, escape, "cp"),
 			renderProjBlock(projects, escape, "cp"),
+			renderCertificationsBlock(certifications, escape, "cp"),
 		)
 
 	default: // compact
 		return fontCSS + fmt.Sprintf(`<div class="resume-output resume-compact" style="width:210mm;height:297mm;background:#fff;color:#1e293b;font-family:'Inter',sans-serif;padding:15mm;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;overflow:hidden;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;">
-			<div style="flex:1;">
-				<div style="border-bottom:2px solid #0d9488;padding-bottom:0.6rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-end;">
-					<div>
-						<h1 style="font-size:1.5rem;font-weight:800;color:#0f172a;margin:0;letter-spacing:-0.5px;">%s</h1>
-						<div style="font-size:0.8rem;color:#0d9488;margin-top:0.15rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">%s</div>
+				<div style="flex:1;">
+					<div style="border-bottom:2px solid #0d9488;padding-bottom:0.6rem;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:flex-end;">
+						<div>
+							<h1 style="font-size:1.5rem;font-weight:800;color:#0f172a;margin:0;letter-spacing:-0.5px;">%s</h1>
+							<div style="font-size:0.8rem;color:#0d9488;margin-top:0.15rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">%s</div>
+						</div>
+						<div style="font-size:0.68rem;color:#475569;line-height:1.45;text-align:right;">%s%s%s%s</div>
 					</div>
-					<div style="font-size:0.68rem;color:#475569;line-height:1.45;text-align:right;">%s%s%s%s</div>
+					
+					<div style="margin-bottom:1rem;">
+						<div style="font-size:0.75rem;font-weight:700;color:#0d9488;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Summary</div>
+						<p style="font-size:0.68rem;line-height:1.5;color:#334155;margin:0;">%s</p>
+					</div>
+					
+					%s
+					%s
+					%s
+					%s
+					%s
+					%s
 				</div>
-				
-				<div style="margin-bottom:1rem;">
-					<div style="font-size:0.75rem;font-weight:700;color:#0d9488;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Summary</div>
-					<p style="font-size:0.68rem;line-height:1.5;color:#334155;margin:0;">%s</p>
-				</div>
-				
-				%s
-				%s
-				%s
-				%s
-			</div>
-		</div>`,
+			</div>`,
 			escape(data.Name), escape(data.Role),
 			cond(data.Email != "", `<span>✉ `+escape(data.Email)+`</span>`, ""),
 			cond(data.Phone != "", `<span>📞 `+escape(data.Phone)+`</span>`, ""),
@@ -704,8 +804,10 @@ func renderResumeHTML(data GenerateRequest, aiContent map[string]interface{}) st
 			cond(data.Portfolio != "", `<span>🔗 `+escape(data.Portfolio)+`</span>`, ""),
 			escape(summary),
 			renderExpBlock("Experience", experiences, escape, "cp"),
+			renderAchievementsBlock(achievements, escape, "cp"),
 			renderEduBlock("Education", educations, escape, "cp"),
 			renderProjBlock(projects, escape, "cp"),
+			renderCertificationsBlock(certifications, escape, "cp"),
 			renderSkillsBlockCategorized(skills, categorizedSkills, hasCategorized, escape, "cp"),
 		)
 	}
@@ -813,8 +915,8 @@ func renderProjBlock(items []proj, escape func(string) string, style string) str
 		b.WriteString(`</div>`)
 	} else if style == "tl" { // timeline style
 		b.WriteString(fmt.Sprintf(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.78rem;font-weight:700;color:#4f46e5;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.5rem;width:fit-content;">Projects</div>
-			<div style="position:relative;padding-left:0.8rem;margin-top:0.4rem;">
-			<div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:#8b5cf6;"></div>`))
+				<div style="position:relative;padding-left:0.8rem;margin-top:0.4rem;">
+				<div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:#8b5cf6;"></div>`))
 		for i, p := range items {
 			extra := ""
 			if i < len(items)-1 {
@@ -1048,7 +1150,181 @@ func renderSkillsByCategory(categorizedSkills map[string][]string, escape func(s
 	return b.String()
 }
 
+// ── Achievements render function ──────────────────────────
+func renderAchievementsBlock(items []achievement, escape func(string) string, style string) string {
+	if len(items) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	if style == "rt" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:bold;color:#10b981;text-transform:lowercase;border-bottom:1px solid #334155;padding-bottom:0.2rem;margin-bottom:0.5rem;">// achievements</div>`)
+		for _, a := range items {
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.5rem;"><div style="font-size:0.75rem;font-weight:600;color:#38bdf8;">%s <span style="font-size:0.65rem;color:#64748b;">[%s]</span></div><div style="font-size:0.68rem;color:#cbd5e1;line-height:1.4;">%s</div></div>`,
+				escape(a.Title), escape(a.Date), escape(a.Description)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "rm" {
+		b.WriteString(`<div style="margin-top:1.2rem;"><div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#0f172a;margin-bottom:0.5rem;font-family:'Lora',serif;border-bottom:1px solid #f1f5f9;padding-bottom:0.25rem;">Achievements</div>`)
+		for _, a := range items {
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.5rem;"><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s</div><span style="font-size:0.62rem;color:#64748b;font-weight:500;font-style:italic;">%s</span></div><div style="font-size:0.68rem;color:#334155;line-height:1.45;margin-top:0.15rem;">%s</div></div>`,
+				escape(a.Title), escape(a.Date), escape(a.Description)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "mod" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f172a;border-bottom:2px solid #38bdf8;padding-bottom:0.25rem;margin-bottom:0.5rem;width:fit-content;">Achievements</div>`)
+		for _, a := range items {
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.5rem;"><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s</div><span style="font-size:0.62rem;color:#64748b;font-weight:500;">%s</span></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;margin-top:0.1rem;">%s</div></div>`,
+				escape(a.Title), escape(a.Date), escape(a.Description)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "exec" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.8rem;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.5rem;font-family:'Playfair Display',serif;">Achievements</div>`)
+		for _, a := range items {
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.5rem;"><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.75rem;font-weight:700;color:#0f1e36;font-family:'Playfair Display',serif;">%s</div><span style="font-size:0.65rem;color:#64748b;font-family:'Lora',serif;font-style:italic;font-weight:500;">%s</span></div><div style="font-size:0.7rem;color:#334155;line-height:1.5;font-family:'Lora',serif;margin-top:0.15rem;">%s</div></div>`,
+				escape(a.Title), escape(a.Date), escape(a.Description)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "cr" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.8rem;font-weight:700;color:#a855f7;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">🏆 Achievements</div>`)
+		for _, a := range items {
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.6rem;background:#faf5ff;border-radius:8px;padding:0.5rem 0.6rem;border-left:3px solid #a855f7;"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:0.2rem;"><span style="font-size:0.75rem;font-weight:700;color:#581c87;">%s</span><span style="font-size:0.62rem;color:#701a75;font-weight:600;background:#f3e8ff;padding:0.1rem 0.35rem;border-radius:4px;">%s</span></div><div style="font-size:0.65rem;color:#4a044e;line-height:1.45;">%s</div></div>`,
+				escape(a.Title), escape(a.Date), escape(a.Description)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "tl" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.78rem;font-weight:700;color:#4f46e5;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.5rem;width:fit-content;">Achievements</div>
+			<div style="position:relative;padding-left:0.8rem;margin-top:0.4rem;">
+			<div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:#8b5cf6;"></div>`)
+		for i, a := range items {
+			extra := ""
+			if i < len(items)-1 {
+				extra = `margin-bottom:0.6rem;`
+			}
+			b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:-1.15rem;top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#8b5cf6;font-size:0.65rem;margin-left:0.4rem;">[%s]</span></div></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;margin-top:0.15rem;">%s</div></div>`,
+				extra, escape(a.Title), escape(a.Date), escape(a.Description)))
+		}
+		b.WriteString(`</div></div>`)
+	} else if style == "cl" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.78rem;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.5rem;width:fit-content;">Achievements</div>`)
+		for _, a := range items {
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;"><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#6b7280;font-size:0.65rem;margin-left:0.4rem;">(%s)</span></div></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;margin-top:0.1rem;">%s</div></div>`,
+				escape(a.Title), escape(a.Date), escape(a.Description)))
+		}
+		b.WriteString(`</div>`)
+	} else { // compact, cp
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#0d9488;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.4rem;border-bottom:1px solid #f1f5f9;padding-bottom:0.2rem;">Achievements</div>`)
+		for _, a := range items {
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;"><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s <span style="font-weight:500;color:#6b7280;font-size:0.65rem;margin-left:0.4rem;">(%s)</span></div></div><div style="font-size:0.65rem;color:#4b5563;line-height:1.45;margin-top:0.1rem;">%s</div></div>`,
+				escape(a.Title), escape(a.Date), escape(a.Description)))
+		}
+		b.WriteString(`</div>`)
+	}
+	return b.String()
+}
 
+// ── Certifications render function ────────────────────────
+func renderCertificationsBlock(items []certification, escape func(string) string, style string) string {
+	if len(items) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	if style == "rt" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:bold;color:#10b981;text-transform:lowercase;border-bottom:1px solid #334155;padding-bottom:0.2rem;margin-bottom:0.5rem;">// certifications</div>`)
+		for _, c := range items {
+			linkStr := ""
+			if c.Link != "" {
+				linkStr = fmt.Sprintf(` <a href="%s" style="color:#38bdf8;text-decoration:underline;font-size:0.62rem;">[link]</a>`, escape(c.Link))
+			}
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;"><div style="font-size:0.72rem;font-weight:600;color:#38bdf8;">%s%s</div><div style="font-size:0.65rem;color:#94a3b8;">%s <span style="color:#64748b;">[%s]</span></div></div>`,
+				escape(c.Title), linkStr, escape(c.Issuer), escape(c.Date)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "rm" {
+		b.WriteString(`<div style="margin-top:1.2rem;"><div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#0f172a;margin-bottom:0.5rem;font-family:'Lora',serif;border-bottom:1px solid #f1f5f9;padding-bottom:0.25rem;">Certifications</div>`)
+		for _, c := range items {
+			linkStr := ""
+			if c.Link != "" {
+				linkStr = fmt.Sprintf(` <a href="%s" style="color:#64748b;font-size:0.62rem;text-decoration:underline;">[link]</a>`, escape(c.Link))
+			}
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:600;color:#0f172a;">%s%s <span style="font-weight:400;color:#64748b;">— %s</span></div><div style="font-size:0.65rem;color:#64748b;margin-left:auto;">%s</div></div>`,
+				escape(c.Title), linkStr, escape(c.Issuer), escape(c.Date)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "mod" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#0f172a;border-bottom:2px solid #38bdf8;padding-bottom:0.25rem;margin-bottom:0.5rem;width:fit-content;">Certifications</div>`)
+		for _, c := range items {
+			linkStr := ""
+			if c.Link != "" {
+				linkStr = fmt.Sprintf(` <a href="%s" style="color:#38bdf8;font-size:0.62rem;text-decoration:underline;">[link]</a>`, escape(c.Link))
+			}
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s%s <span style="font-weight:500;color:#38bdf8;">@ %s</span></div><span style="font-size:0.62rem;color:#64748b;font-weight:500;margin-left:auto;">%s</span></div>`,
+				escape(c.Title), linkStr, escape(c.Issuer), escape(c.Date)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "exec" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.8rem;font-weight:700;color:#b45309;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.5rem;font-family:'Playfair Display',serif;">Certifications</div>`)
+		for _, c := range items {
+			linkStr := ""
+			if c.Link != "" {
+				linkStr = fmt.Sprintf(` <a href="%s" style="color:#b45309;font-size:0.65rem;text-decoration:underline;">[link]</a>`, escape(c.Link))
+			}
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.75rem;font-weight:700;color:#0f1e36;font-family:'Playfair Display',serif;">%s%s <span style="font-weight:400;color:#475569;font-family:'Lora',serif;font-style:italic;">from %s</span></div><div style="font-size:0.65rem;color:#64748b;font-family:'Lora',serif;font-style:italic;margin-left:auto;">%s</div></div>`,
+				escape(c.Title), linkStr, escape(c.Issuer), escape(c.Date)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "cr" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.8rem;font-weight:700;color:#6d28d9;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">📜 Certifications</div>`)
+		for _, c := range items {
+			linkStr := ""
+			if c.Link != "" {
+				linkStr = fmt.Sprintf(` <a href="%s" style="color:#7c3aed;font-size:0.62rem;text-decoration:underline;">[link]</a>`, escape(c.Link))
+			}
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.4rem;background:#f5f3ff;border-radius:8px;padding:0.4rem 0.6rem;border-left:3px solid #a855f7;"><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#1e1b4b;">%s%s <span style="font-weight:500;color:#7c3aed;">— %s</span></div><span style="font-size:0.62rem;color:#6b21a8;font-weight:500;margin-left:auto;">%s</span></div></div>`,
+				escape(c.Title), linkStr, escape(c.Issuer), escape(c.Date)))
+		}
+		b.WriteString(`</div>`)
+	} else if style == "tl" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.78rem;font-weight:700;color:#4f46e5;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.5rem;width:fit-content;">Certifications</div>
+			<div style="position:relative;padding-left:0.8rem;margin-top:0.4rem;">
+			<div style="position:absolute;left:0;top:0;bottom:0;width:2px;background:#8b5cf6;"></div>`)
+		for i, c := range items {
+			extra := ""
+			if i < len(items)-1 {
+				extra = `margin-bottom:0.6rem;`
+			}
+			linkStr := ""
+			if c.Link != "" {
+				linkStr = fmt.Sprintf(` <a href="%s" style="color:#8b5cf6;font-size:0.6rem;text-decoration:underline;">[link]</a>`, escape(c.Link))
+			}
+			b.WriteString(fmt.Sprintf(`<div style="position:relative;padding-left:1rem;%s"><div style="position:absolute;left:-1.15rem;top:0.25rem;width:8px;height:8px;border-radius:50%%;background:#8b5cf6;border:2px solid #fff;box-shadow:0 0 0 2px #8b5cf6;"></div><div style="display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s%s <span style="font-weight:500;color:#8b5cf6;">— %s</span></div><span style="font-size:0.62rem;color:#6b7280;font-weight:500;margin-left:auto;">%s</span></div></div>`,
+				extra, escape(c.Title), linkStr, escape(c.Issuer), escape(c.Date)))
+		}
+		b.WriteString(`</div></div>`)
+	} else if style == "cl" {
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.78rem;font-weight:700;color:#0f172a;text-transform:uppercase;letter-spacing:1px;border-bottom:2px solid #e2e8f0;padding-bottom:0.2rem;margin-bottom:0.5rem;width:fit-content;">Certifications</div>`)
+		for _, c := range items {
+			linkStr := ""
+			if c.Link != "" {
+				linkStr = fmt.Sprintf(` <a href="%s" style="color:#4f46e5;font-size:0.6rem;text-decoration:underline;">[link]</a>`, escape(c.Link))
+			}
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.3rem;display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s%s <span style="font-weight:400;color:#64748b;">— %s</span></div><span style="font-size:0.62rem;color:#6b7280;font-weight:500;margin-left:auto;">%s</span></div>`,
+				escape(c.Title), linkStr, escape(c.Issuer), escape(c.Date)))
+		}
+		b.WriteString(`</div>`)
+	} else { // compact, cp
+		b.WriteString(`<div style="margin-bottom:1.2rem;"><div style="font-size:0.75rem;font-weight:700;color:#0d9488;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.4rem;border-bottom:1px solid #f1f5f9;padding-bottom:0.2rem;">Certifications</div>`)
+		for _, c := range items {
+			linkStr := ""
+			if c.Link != "" {
+				linkStr = fmt.Sprintf(` <a href="%s" style="color:#0d9488;font-size:0.6rem;text-decoration:underline;">[link]</a>`, escape(c.Link))
+			}
+			b.WriteString(fmt.Sprintf(`<div style="margin-bottom:0.3rem;display:flex;justify-content:space-between;align-items:baseline;"><div style="font-size:0.72rem;font-weight:700;color:#0f172a;">%s%s <span style="font-weight:400;color:#64748b;">— %s</span></div><span style="font-size:0.62rem;color:#6b7280;font-weight:500;margin-left:auto;">%s</span></div>`,
+				escape(c.Title), linkStr, escape(c.Issuer), escape(c.Date)))
+		}
+		b.WriteString(`</div>`)
+	}
+	return b.String()
+}
 
 // ── New template render functions ─────────────────────────
 func renderExpBlockExecutive(items []exp, escape func(string) string) string {
@@ -1264,8 +1540,9 @@ func handleConfirm(w http.ResponseWriter, r *http.Request) {
 		Location: req.Location, Portfolio: req.Portfolio, Summary: req.Summary,
 		Skills: req.Skills, SkillsCategories: req.SkillsCategories,
 		Experience: req.Experience, Education: req.Education,
-		Projects:   req.Projects,
-		Template:   req.Template,
+		Projects: req.Projects, Achievements: req.Achievements,
+		Certifications: req.Certifications,
+		Template:       req.Template,
 	}
 
 	var aiContent map[string]interface{}
