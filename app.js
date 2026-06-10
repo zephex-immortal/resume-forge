@@ -505,7 +505,7 @@ document.addEventListener("DOMContentLoaded", () => {
                       .map(
                         (cat) => `
                         <div style="margin-bottom:0.3rem;">
-                            <div style="font-size:0.6rem;font-weight:600;color:#00cc9e;margin-bottom:0.05rem;">${cat.label}</div>
+                            <div style="font-size:0.6rem;font-weight:600;color:#38bdf8;margin-bottom:0.05rem;">${cat.label}</div>
                             <div class="rt-skills">
                                 ${cat.value
                                   .split(",")
@@ -865,6 +865,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (el) {
         el.style.transform = '';
         el.style.transformOrigin = '';
+        el.style.boxShadow = '';
+        el.style.width = '';
         existing.parentNode.insertBefore(el, existing);
       }
       existing.remove();
@@ -881,26 +883,74 @@ document.addEventListener("DOMContentLoaded", () => {
       const el = document.querySelector('.resume-output');
       if (!el) return;
 
-      const targetPx = Math.round(297 * 3.779527559); // 297mm -> px
+      const targetWidth = 794; // 210mm in px at 96 DPI
+      const targetHeight = 1122; // 297mm in px at 96 DPI
+      const targetRatio = targetHeight / targetWidth; // 1.4131
 
-      if (el.scrollHeight <= targetPx) return;
+      // Reset any previous width override
+      el.style.width = '';
 
-      const scale = targetPx / el.scrollHeight;
+      // Measure initial height
+      let h = el.scrollHeight;
 
-      const wrap = document.createElement('div');
-      wrap.className = 'resume-output-wrap';
-      wrap.style.cssText = `width:210mm;height:297mm;overflow:hidden;margin:0 auto;`;
-
-      el.parentNode.insertBefore(wrap, el);
-      wrap.appendChild(el);
-
-      el.style.transformOrigin = 'top left';
-      el.style.transform = `scale(${scale})`;
-
-      if (scale < 0.35) {
-        console.warn(`Resume heavily scaled: ${Math.round(scale * 100)}%`);
+      if (h <= targetHeight) {
+        // Fits perfectly without scaling!
+        return;
       }
+
+      // First optimization pass: estimate wider layout width to reduce height
+      let w1 = Math.round(h / targetRatio);
+      el.style.width = `${w1}px`;
+
+      // Wait for layout to reflow
+      requestAnimationFrame(() => {
+        let h1 = el.scrollHeight;
+        let r1 = h1 / w1;
+
+        let wFinal = w1;
+        let hFinal = h1;
+
+        if (r1 > targetRatio) {
+          // If it still doesn't fit the aspect ratio, do a second pass
+          let w2 = Math.round(h1 / targetRatio);
+          el.style.width = `${w2}px`;
+          
+          requestAnimationFrame(() => {
+            let h2 = el.scrollHeight;
+            wFinal = w2;
+            hFinal = h2;
+            applyScaling(el, wFinal, hFinal, targetWidth, targetHeight);
+          });
+        } else {
+          applyScaling(el, wFinal, hFinal, targetWidth, targetHeight);
+        }
+      });
     });
+  }
+
+  function applyScaling(el, wLayout, hLayout, targetWidth, targetHeight) {
+    const scale = targetWidth / wLayout;
+
+    // Detect background color of the resume template
+    let bg = window.getComputedStyle(el).backgroundColor;
+    if (!bg || bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') {
+      bg = '#ffffff';
+    }
+
+    const wrap = document.createElement('div');
+    wrap.className = 'resume-output-wrap';
+    wrap.style.cssText = `width:210mm;height:297mm;overflow:hidden;margin:0 auto;box-shadow:0 0 30px rgba(0,0,0,0.3);border-radius:2px;background:${bg};position:relative;`;
+
+    el.parentNode.insertBefore(wrap, el);
+    wrap.appendChild(el);
+
+    el.style.transformOrigin = 'top left';
+    el.style.transform = `scale(${scale})`;
+    el.style.boxShadow = 'none';
+
+    if (scale < 0.35) {
+      console.warn(`Resume heavily scaled: ${Math.round(scale * 100)}%`);
+    }
   }
 
   // ─── RENDER RESUME ─────────────────────────────────────
@@ -1224,7 +1274,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ─── PRINT STYLES ─────────────────────────────────────
   const printStyle = document.createElement("style");
-  printStyle.textContent = `@media print { body * { visibility: hidden; } #resume-preview, #resume-preview * { visibility: visible; } #resume-preview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 0 !important; overflow: hidden; } .resume-output { box-shadow: none !important; margin: 0 !important; border-radius: 0 !important; } @page { margin: 0; size: A4; } }`;
+  printStyle.textContent = `@media print { body * { visibility: hidden; } #resume-preview, #resume-preview * { visibility: visible; } #resume-preview { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 0 !important; overflow: hidden; } .resume-output { margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; } .resume-output-wrap { width: 100% !important; height: 100% !important; margin: 0 !important; box-shadow: none !important; border-radius: 0 !important; } @page { margin: 0; size: A4; } }`;
   document.head.appendChild(printStyle);
 
   // ─── TOAST STYLES ─────────────────────────────────────

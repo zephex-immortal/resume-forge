@@ -220,19 +220,24 @@ body {
 }
 
 /* Terminal template */
+.resume-terminal {
+    background: #0f172a !important;
+    color: #e2e8f0 !important;
+}
 .resume-terminal .rt-header {
     background: #0a0a0e;
-    color: #00ffc8;
+    color: #10b981;
     padding: 1.5rem 2rem 1rem;
-    font-family: 'Courier New', monospace;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 }
 .resume-terminal .rt-header h1 {
     font-size: 1.8rem;
     font-weight: bold;
+    color: #10b981;
     letter-spacing: -0.5px;
 }
 .resume-terminal .rt-header .rt-role {
-    color: #6a6a7a;
+    color: #38bdf8;
     font-size: 0.85rem;
     margin-top: 0.2rem;
 }
@@ -240,20 +245,20 @@ body {
     display: flex; flex-wrap: wrap; gap: 0.8rem;
     margin-top: 0.6rem;
     font-size: 0.7rem;
-    color: #6a6a7a;
+    color: #94a3b8;
 }
 .resume-terminal .rt-body {
     padding: 1rem 2rem 2rem;
-    color: #1a1a1a;
+    color: #e2e8f0;
 }
 .resume-terminal .rt-section { margin-bottom: 1rem; }
 .resume-terminal .rt-section-title {
     font-size: 0.8rem;
     font-weight: bold;
-    color: #00cc9e;
-    text-transform: uppercase;
+    color: #10b981;
+    text-transform: lowercase;
     letter-spacing: 1px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #334155;
     padding-bottom: 0.2rem;
     margin-bottom: 0.4rem;
 }
@@ -261,14 +266,15 @@ body {
 .resume-terminal .rt-item-title {
     font-size: 0.8rem;
     font-weight: 600;
+    color: #38bdf8;
 }
 .resume-terminal .rt-item-sub {
     font-size: 0.72rem;
-    color: #555;
+    color: #94a3b8;
 }
 .resume-terminal .rt-item-desc {
     font-size: 0.72rem;
-    color: #333;
+    color: #cbd5e1;
     margin-top: 0.15rem;
     line-height: 1.4;
 }
@@ -278,9 +284,10 @@ body {
 .resume-terminal .rt-skill-tag {
     font-size: 0.65rem;
     padding: 0.1rem 0.5rem;
-    border: 1px solid #ddd;
+    border: 1px solid #334155;
     border-radius: 2px;
-    color: #333;
+    color: #10b981;
+    background: #1e293b;
 }
 
 /* Minimal template */
